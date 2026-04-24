@@ -14,6 +14,14 @@ import { JwtService } from '@nestjs/jwt';
 import { compare, hash } from 'bcrypt';
 import { Response } from 'express';
 
+const secureCookieOptions = (type = 'accessToken') => {
+  if (process.env.NODE_ENV === 'development') return {};
+  return {
+    httpOnly: false,
+    secure: false,
+    maxAge: type === 'refresh' ? 7 * 24 * 60 * 60 : 1 * 24 * 60 * 60,
+  };
+};
 @Injectable()
 export class AuthService {
   constructor(
@@ -69,16 +77,8 @@ export class AuthService {
         create: { userId, token: hashRefreshToken },
       });
 
-      res.cookie('accessToken', accessToken, {
-        httpOnly: true,
-        secure: true,
-        sameSite: 'none',
-      });
-      res.cookie('refreshToken', refreshToken, {
-        httpOnly: true,
-        secure: true,
-        sameSite: 'none',
-      });
+      res.cookie('accessToken', accessToken, secureCookieOptions());
+      res.cookie('refreshToken', refreshToken, secureCookieOptions('refresh'));
 
       return sendResponsive(
         {
@@ -153,16 +153,8 @@ export class AuthService {
       create: { userId, token: hashRefreshToken },
     });
 
-    res.cookie('accessToken', accessToken, {
-      httpOnly: true,
-      secure: true,
-      sameSite: 'none',
-    });
-    res.cookie('refreshToken', refreshToken, {
-      httpOnly: true,
-      secure: true,
-      sameSite: 'none',
-    });
+    res.cookie('accessToken', accessToken, secureCookieOptions());
+    res.cookie('refreshToken', refreshToken, secureCookieOptions('refresh'));
 
     return sendResponsive(
       {
@@ -216,7 +208,7 @@ export class AuthService {
       role: payload.role,
     });
 
-    res.cookie('accessToken', newAccessToken);
+    res.cookie('accessToken', newAccessToken, secureCookieOptions());
 
     return sendResponsive(null, 'refresh token successfully');
   }
