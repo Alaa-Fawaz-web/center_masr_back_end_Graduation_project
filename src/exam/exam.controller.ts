@@ -15,11 +15,14 @@ import { CreateExamDto } from './dto/create-exam.dto';
 import { GetAllLessonDto } from 'src/lesson/dto/getAllLessonDto';
 import RolesDecorator from 'src/decorator/roles.decorator';
 import { TEACHER } from 'src/utils';
+import { ApiOperation, ApiTags } from '@nestjs/swagger';
 
+@ApiTags('exams')
 @Controller('exams')
 export class ExamController {
   constructor(private readonly examService: ExamService) {}
 
+  @ApiOperation({ summary: 'Get all exams' })
   @Get()
   findAll(
     @Query('courseId', ParseUUIDPipe) courseId: string,
@@ -33,11 +36,13 @@ export class ExamController {
     );
   }
 
+  @ApiOperation({ summary: 'Get exam' })
   @Get(':examId')
   findOne(@Param('examId', ParseUUIDPipe) examId: string, @Req() req) {
     return this.examService.findOne(req.user.profileId, examId);
   }
 
+  @ApiOperation({ summary: 'Create exam' })
   @RolesDecorator(TEACHER)
   @Post(':lessonId')
   create(
@@ -54,6 +59,7 @@ export class ExamController {
     );
   }
 
+  @ApiOperation({ summary: 'Update exam' })
   @RolesDecorator(TEACHER)
   @Patch(':examId')
   update(
@@ -64,6 +70,7 @@ export class ExamController {
     return this.examService.update(examId, req.user.profileId, updateExamDto);
   }
 
+  @ApiOperation({ summary: 'Delete exam' })
   @RolesDecorator(TEACHER)
   @Delete(':examId')
   remove(

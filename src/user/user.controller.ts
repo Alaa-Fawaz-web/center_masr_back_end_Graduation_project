@@ -17,7 +17,9 @@ import { ProfileService } from 'src/utils/methods_handler';
 import { RoleTeacherAndCenterDto } from 'src/validators/roles.dto';
 import QueryPageDto from 'src/validators/queryPageDto';
 import { UpdateUserDto } from './dto/updateUser.dto';
+import { ApiOperation, ApiTags } from '@nestjs/swagger';
 
+@ApiTags('users')
 @Controller('users')
 export class UsersController {
   constructor(
@@ -26,6 +28,7 @@ export class UsersController {
     private ProfileService: ProfileService,
   ) {}
 
+  @ApiOperation({ summary: 'Get all users' })
   @Get()
   getAllUsers(
     @Body() getAllUsersDto: GetAllUsersDto,
@@ -34,6 +37,7 @@ export class UsersController {
     return this.usersService.getAllUsers(getAllUsersDto, queryPageDto.page);
   }
 
+  @ApiOperation({ summary: 'Get user' })
   @Get(':id')
   getUser(
     @Param('id', ParseUUIDPipe) targetUserId: string,
@@ -44,6 +48,7 @@ export class UsersController {
     return this.usersService.getUserById(targetUserId, role, req?.user?.userId);
   }
 
+  @ApiOperation({ summary: 'Update user' })
   @Patch('')
   updateUser(@Body() updateUserDto: UpdateUserDto, @Req() req) {
     if (req.user.role !== updateUserDto.role)
@@ -60,6 +65,7 @@ export class UsersController {
     );
   }
 
+  @ApiOperation({ summary: 'Delete user' })
   @Delete(':userId')
   deleteUser(@Param('userId', ParseUUIDPipe) userId: string, @Req() req) {
     return this.usersService.deleteUser(req.user.userId);

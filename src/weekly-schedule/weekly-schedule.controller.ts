@@ -8,7 +8,6 @@ import {
   Param,
   Req,
   ParseUUIDPipe,
-  Query,
 } from '@nestjs/common';
 import { WeeklyScheduleService } from './weekly-schedule.service';
 import { GetWeeklyScheduleDto } from './dto/GetWeeklyScheduleDto';
@@ -16,11 +15,14 @@ import { CreateWeeklyDto } from './dto/create-weekly-schedule.dto';
 import RolesDecorator from 'src/decorator/roles.decorator';
 import { CENTER } from 'src/utils';
 import { TeacherDayDto } from './dto/TeacherDayDto';
+import { ApiOperation, ApiTags } from '@nestjs/swagger';
 
+@ApiTags('weekly-schedule')
 @Controller('weekly-schedule')
 export class WeeklyScheduleController {
   constructor(private readonly service: WeeklyScheduleService) {}
 
+  @ApiOperation({ summary: 'Get weekly schedule' })
   @Get(':centerId')
   getWeeklySchedule(
     @Param('centerId', ParseUUIDPipe) centerId: string,
@@ -36,6 +38,7 @@ export class WeeklyScheduleController {
     );
   }
 
+  @ApiOperation({ summary: 'Create weekly schedule' })
   @RolesDecorator(CENTER)
   @Post()
   createWeeklySchedule(
@@ -48,6 +51,7 @@ export class WeeklyScheduleController {
     );
   }
 
+  @ApiOperation({ summary: 'Create teacher day weekly schedule' })
   @RolesDecorator(CENTER)
   @Post(':weeklyScheduleId')
   createTeacherDayWeeklySchedule(
@@ -62,6 +66,7 @@ export class WeeklyScheduleController {
     );
   }
 
+  @ApiOperation({ summary: 'Update weekly schedule' })
   @RolesDecorator(CENTER)
   @Patch(':id')
   updateWeeklySchedule(
@@ -72,6 +77,7 @@ export class WeeklyScheduleController {
     return this.service.updateWeeklySchedule(id, data, req.user.profileId);
   }
 
+  @ApiOperation({ summary: 'Delete weekly schedule' })
   @RolesDecorator(CENTER)
   @Delete(':weeklyScheduleId')
   deleteWeeklySchedule(
@@ -84,6 +90,7 @@ export class WeeklyScheduleController {
     );
   }
 
+  @ApiOperation({ summary: 'Delete teacher day weekly schedule' })
   @RolesDecorator(CENTER)
   @Delete('teacherDay:teacherDayId')
   deleteTeacherWeeklySchedule(
