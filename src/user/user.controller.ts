@@ -18,6 +18,7 @@ import { RoleTeacherAndCenterDto } from 'src/validators/roles.dto';
 import QueryPageDto from 'src/validators/queryPageDto';
 import { UpdateUserDto } from './dto/updateUser.dto';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
+import RolesDecorator from 'src/decorator/roles.decorator';
 
 @ApiTags('users')
 @Controller('users')
@@ -29,6 +30,7 @@ export class UsersController {
   ) {}
 
   @ApiOperation({ summary: 'Get all users' })
+  @RolesDecorator()
   @Get()
   getAllUsers(
     @Body() getAllUsersDto: GetAllUsersDto,
