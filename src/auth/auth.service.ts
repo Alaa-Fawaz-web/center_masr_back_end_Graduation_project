@@ -69,8 +69,11 @@ export class AuthService {
         create: { userId, token: hashRefreshToken },
       });
 
-      res.cookie('accessToken', accessToken);
-      res.cookie('refreshToken', refreshToken);
+      res.cookie('accessToken', accessToken, { httpOnly: true, secure: true });
+      res.cookie('refreshToken', refreshToken, {
+        httpOnly: true,
+        secure: true,
+      });
 
       return sendResponsive(
         {
@@ -145,8 +148,8 @@ export class AuthService {
       create: { userId, token: hashRefreshToken },
     });
 
-    res.cookie('accessToken', accessToken);
-    res.cookie('refreshToken', refreshToken);
+    res.cookie('accessToken', accessToken, { httpOnly: true, secure: true });
+    res.cookie('refreshToken', refreshToken, { httpOnly: true, secure: true });
 
     return sendResponsive(
       {

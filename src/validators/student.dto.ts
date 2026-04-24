@@ -13,7 +13,7 @@ export class StudentDto {
   @IsArray()
   @Trim()
   @IsInSet(classRoomSet, { each: true, message: 'صف دراسي غير صالح' })
-  classRoom?: string[];
+  classRoom?: string;
 
   @ApiPropertyOptional({
     description: 'المرحلة التعليمية',
