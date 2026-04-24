@@ -39,6 +39,7 @@ export class UsersController {
     return this.usersService.getAllUsers(getAllUsersDto, queryPageDto.page);
   }
 
+  @RolesDecorator()
   @ApiOperation({ summary: 'Get user' })
   @Get(':id')
   getUser(
