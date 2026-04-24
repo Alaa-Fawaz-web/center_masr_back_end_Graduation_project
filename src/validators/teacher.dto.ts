@@ -1,45 +1,87 @@
-import { IsArray, IsInt, IsString, Max, Min } from 'class-validator';
+import {
+  IsArray,
+  IsInt,
+  IsOptional,
+  IsString,
+  Max,
+  Min,
+} from 'class-validator';
 import { IsInSet, Trim } from './is-in-set.validator';
 import {
   classRoomSet,
   studyMaterialSet,
   studySystemSet,
 } from 'src/utils/constant';
-import { ApiProperty } from '@nestjs/swagger';
+import { ApiPropertyOptional } from '@nestjs/swagger';
 
 export class TeacherDto {
-  @ApiProperty()
+  @ApiPropertyOptional({
+    description: 'نبذة عن المعلم',
+    example: 'مدرس رياضيات خبرة 10 سنوات',
+  })
+  @IsOptional()
   @Trim()
   @IsString()
   bio?: string;
 
-  @ApiProperty()
+  @ApiPropertyOptional({
+    description: 'نظام الدراسة',
+    enum: ['arabic', 'english'],
+    example: ['arabic', 'english'],
+    type: [String],
+  })
+  @IsOptional()
   @IsArray()
   @IsInSet(studySystemSet, { each: true })
   studySystem?: ('arabic' | 'english')[];
 
-  @ApiProperty()
+  @ApiPropertyOptional({
+    description: 'الصفوف التي يدرسها المعلم',
+    example: ['first grade elementary', 'second grade elementary'],
+    type: [String],
+  })
+  @IsOptional()
   @IsArray()
-  @IsInSet(classRoomSet, { each: true })
+  @IsInSet(classRoomSet, { each: true, message: 'صف دراسي غير صالح' })
   classRooms?: string[];
 
-  @ApiProperty()
+  @ApiPropertyOptional({
+    description: 'المادة الدراسية الرئيسية للمعلم',
+    example: 'math',
+  })
+  @IsOptional()
   @Trim()
-  @IsInSet(studyMaterialSet)
+  @IsInSet(studyMaterialSet, { message: 'مادة دراسية غير صالحة' })
   studyMaterial?: string;
 
-  @ApiProperty()
+  @ApiPropertyOptional({
+    description: 'المؤهل التعليمي',
+    example: 'بكالوريوس علوم',
+  })
+  @IsOptional()
+  @Trim()
   @IsString()
   educationalQualification?: string;
 
-  @ApiProperty()
-  @IsInt()
-  @Min(0)
-  @Max(100)
+  @ApiPropertyOptional({
+    description: 'سنوات الخبرة',
+    example: 5,
+    minimum: 0,
+    maximum: 100,
+  })
+  @IsOptional()
+  @IsInt({ message: 'يجب أن يكون رقمًا صحيحًا' })
+  @Min(0, { message: 'لا يمكن أن يكون أقل من 0' })
+  @Max(100, { message: 'لا يمكن أن يزيد عن 100' })
   experienceYear?: number;
 
-  @ApiProperty()
-  @IsInt()
-  @Min(0)
+  @ApiPropertyOptional({
+    description: 'سعر الحصة (بالجنيه)',
+    example: 150,
+    minimum: 0,
+  })
+  @IsOptional()
+  @IsInt({ message: 'يجب أن يكون رقمًا صحيحًا' })
+  @Min(0, { message: 'لا يمكن أن يكون سالبًا' })
   sharePrice?: number;
 }

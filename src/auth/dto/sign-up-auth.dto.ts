@@ -1,4 +1,4 @@
-import { OmitType } from '@nestjs/mapped-types';
+import { OmitType } from '@nestjs/swagger';
 import BaseDataUserDto from 'src/validators/baseDataUser.dto';
 
 export default class SignUpAuthDto extends OmitType(BaseDataUserDto, [

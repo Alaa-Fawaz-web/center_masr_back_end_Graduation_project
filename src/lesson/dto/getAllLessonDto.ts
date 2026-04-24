@@ -1,4 +1,4 @@
-import { PickType, PartialType } from '@nestjs/mapped-types';
+import { PartialType, PickType } from '@nestjs/swagger';
 import { CreateLessonDto } from './create-lesson.dto';
 
 export class GetAllLessonDto extends PartialType(

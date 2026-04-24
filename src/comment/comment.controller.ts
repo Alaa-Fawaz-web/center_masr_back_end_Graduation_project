@@ -12,8 +12,8 @@ import {
 } from '@nestjs/common';
 import { CommentService } from './comment.service';
 import { CreateCommentDto } from './dto/create-comment.dto';
-import { UpdateCommentDto } from './dto/update-comment.dto';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
+import { UpdateCommentDto } from './dto/update-comment.dto';
 
 @ApiTags('comments')
 @Controller('comments')
@@ -56,7 +56,6 @@ export class CommentController {
     );
   }
 
-  @ApiOperation({ summary: 'Delete comment' })
   @Delete(':commentId')
   deleteComment(
     @Param('commentId', ParseUUIDPipe) commentId: string,
