@@ -1,4 +1,4 @@
-import { Post, Body, Req, Res, Get, Controller } from '@nestjs/common';
+import { Post, Body, Req, Res, Get, Controller, ForbiddenException } from '@nestjs/common';
 import AuthDecorator from 'src/decorator/auth.decorator';
 import SignUpAuthDto from './dto/sign-up-auth.dto';
 import SignInAuthDto from './dto/sign-in-auth.dto';

@@ -19,6 +19,7 @@ import QueryPageDto from 'src/validators/queryPageDto';
 import { UpdateUserDto } from './dto/updateUser.dto';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
 import RolesDecorator from 'src/decorator/roles.decorator';
+import AuthDecorator from 'src/decorator/auth.decorator';
 
 
 @ApiTags('users')
