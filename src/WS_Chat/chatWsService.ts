@@ -45,7 +45,7 @@ export class ChatWsService implements OnModuleInit, OnModuleDestroy {
   onModuleInit() {
     this.wss = new Server({ port: 3001 });
 
-    console.log('🚀 WS running on ws://localhost:3001');
+    console.log('🚀 WS running on ws://localhost:3002');
 
     this.wss.on('connection', (socket: WebSocket, req: Request) => {
       const url = new URL(req.url!, 'http://localhost');
