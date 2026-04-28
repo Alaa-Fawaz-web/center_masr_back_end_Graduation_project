@@ -1,7 +1,8 @@
 import { IsEnum, IsOptional, IsString } from 'class-validator';
+import QueryPageDto from 'src/validators/queryPageDto';
 import { RoleTeacherAndCenterDto } from 'src/validators/roles.dto';
 
-export class GetAllUsersDto {
+export class GetAllUsersDto extends QueryPageDto {
   @IsEnum(RoleTeacherAndCenterDto)
   role!: RoleTeacherAndCenterDto;
 

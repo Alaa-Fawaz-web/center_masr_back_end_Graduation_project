@@ -29,11 +29,8 @@ export class UsersController {
 
   @AuthDecorator()
   @Get()
-  getAllUsers(
-    @Body() getAllUsersDto: GetAllUsersDto,
-    @Query() queryPageDto: QueryPageDto,
-  ) {
-    return this.usersService.getAllUsers(getAllUsersDto, queryPageDto.page);
+  getAllUsers(@Query() getAllUsersDto: GetAllUsersDto) {
+    return this.usersService.getAllUsers(getAllUsersDto, getAllUsersDto.page);
   }
 
   @Get(':id')
