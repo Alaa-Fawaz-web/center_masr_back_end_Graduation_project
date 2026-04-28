@@ -146,6 +146,22 @@ model RefreshToken {
   token String
 }
 
+model Conversation {
+  id String @id @default(uuid())
+
+  userAId String
+  userBId String
+}
+
+model Message {
+  id String @id @default(uuid())
+
+  conversationId String
+  senderId       String
+  content        String
+  createdAt      DateTime
+}
+
 model Review {
   id String @id @default(uuid())
 

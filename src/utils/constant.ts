@@ -6,41 +6,41 @@ import {
 } from '@nestjs/common';
 
 const studyMaterialArray: string[] = [
-  'science',
-  'physics',
-  'biology',
-  'algebra',
-  'statics',
-  'history',
-  'calculus',
-  'dynamics',
-  'chemistry',
-  'geography',
-  'mathematics',
-  'solid geometry',
-  'social studies',
-  'arabic language',
-  'english language',
-  'philosophy and logic',
-  'religious education',
-  'physical education',
-  'computer science/information technology',
-  'information and communication technology (ICT)',
+  'العلوم',
+  'الفيزياء',
+  'الأحياء',
+  'الجبر',
+  'الاستاتيكا',
+  'التاريخ',
+  'التفاضل والتكامل',
+  'الديناميكا',
+  'الكيمياء',
+  'الجغرافيا',
+  'الرياضيات',
+  'الهندسة الفراغية',
+  'الدراسات الاجتماعية',
+  'اللغة العربية',
+  'اللغة الإنجليزية',
+  'الفلسفة والمنطق',
+  'التربية الدينية',
+  'التربية البدنية',
+  'علوم الحاسوب/تكنولوجيا المعلومات',
+  'تكنولوجيا المعلومات والاتصالات',
 ];
 
 const classRoomArray: string[] = [
-  'first grade elementary',
-  'second grade elementary',
-  'third grade elementary',
-  'fourth grade elementary',
-  'fifth grade elementary',
-  'sixth grade elementary',
-  'first year of secondary',
-  'second year of secondary',
-  'third year of secondary',
-  'first grade high school',
-  'second grade high school',
-  'third grade figh school',
+  'الصف الأول الابتدائي',
+  'الصف الثاني الابتدائي',
+  'الصف الثالث الابتدائي',
+  'الصف الرابع الابتدائي',
+  'الصف الخامس الابتدائي',
+  'الصف السادس الابتدائي',
+  'الصف الأولى الإعدادية',
+  'الصف الثانية الإعدادية',
+  'الصف الثالثة الإعدادية',
+  'الصف الأول الثانوي',
+  'الصف الثاني الثانوي',
+  'الصف الثالث الإعدادي',
 ];
 
 const weekDays: string[] = [
@@ -62,9 +62,9 @@ const roleTeacherAndCenter: string[] = [TEACHER, CENTER];
 const roleTeacherAndCenterSet: Set<string> = new Set(roleTeacherAndCenter);
 
 const educationalStageArray: string[] = [
-  'elementary',
-  'secondary',
-  'university',
+  'المرحلة الابتدائية',
+  'المرحلة الثانوية',
+  'الجامعة',
 ];
 const roleArray: string[] = [STUDENT, TEACHER, CENTER, ADMIN];
 
