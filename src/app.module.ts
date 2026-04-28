@@ -21,7 +21,6 @@ import { BookedLessonModule } from './bookedLesson/booked-lesson.module';
 import { BookedWeeklyModule } from './bookedWeekly/booked.weekly.module';
 import { TeacherCenterModule } from './teacher-center/teacher-center.module';
 import { StudentDashboardModule } from './student-dashboard/student-dashboard.module';
-import { ChatModule } from './WS_Chat/ChatModule';
 
 @Module({
   imports: [
@@ -47,7 +46,6 @@ import { ChatModule } from './WS_Chat/ChatModule';
     WeeklyScheduleModule,
     TeacherCenterModule,
     StudentDashboardModule,
-    ChatModule,
   ],
   providers: [
     {
