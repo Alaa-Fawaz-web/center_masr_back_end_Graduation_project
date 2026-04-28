@@ -45,7 +45,7 @@ export class AuthController {
   @Post('refresh')
   async refresh(@Req() req, @Res({ passthrough: true }) res: Response) {
     const [type, refreshToken] = req.headers?.authorization?.split(' ');
-    // if (type !== 'Refresh') throw new ForbiddenException('Invalid token type');
+    if (type !== 'Refresh') throw new ForbiddenException('Invalid token type');
     return this.authService.refreshToken(refreshToken, res);
   }
 
