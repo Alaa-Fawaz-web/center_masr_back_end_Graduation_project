@@ -15,9 +15,6 @@ lerna-debug.log*
 # OS
 .DS_Store
 
-/WS_Chat
-/redis
-/notification
 
 
 # Tests
