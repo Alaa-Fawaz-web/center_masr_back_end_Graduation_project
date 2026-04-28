@@ -40,6 +40,10 @@ model User {
   profile_center  ProfileCenter?
   profile_teacher ProfileTeacher?
 
+  notification  Notification[]
+  conversations Conversation[]
+  messages      Message[]
+
   posts    Post[]
   comments Comment[]
 
@@ -52,6 +56,18 @@ model User {
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+}
+
+model Follower {
+  id          String @id @default(uuid())
+  followingId String
+  followerId  String
+
+  following User @relation("following", fields: [followingId], references: [id], onDelete: Cascade)
+  follower  User @relation("followers", fields: [followerId], references: [id], onDelete: Cascade)
+
+  @@unique([followingId, followerId])
+  @@index([followingId, followerId])
 }
 
 model Teacher {
@@ -120,8 +136,30 @@ model Center {
   educationalStage String[]
   studySystem      String[]
 
-  schedules  WeeklySchedule[]
-  teacherDay TeacherDay[]
+  teacherCenter TeacherCenter[]
+  schedules     WeeklySchedule[]
+  teacherDay    TeacherDay[]
+}
+
+model TeacherCenter {
+  id String @id @default(uuid())
+
+  centerId String @unique
+  center   Center @relation(fields: [centerId], references: [id], onDelete: Cascade)
+
+  name                     String
+  classRoom                String?
+  studyMaterial            String?
+  studySystem              String[]
+  bio                      String?
+  star                     Float    @default(0)
+  whatsApp                 String?
+  sharePrice               Int      @default(0)
+  centersWhereHeStudie     String[]
+  experienceYear           Int      @default(0)
+  educationalQualification String?
+
+  @@index([classRoom, studyMaterial, studySystem])
 }
 
 model ProfileCenter {
@@ -132,10 +170,62 @@ model ProfileCenter {
 
   bio            String?
   whatsApp       String?
+  studyMaterials String[]
   contactUsPhone String[]
   contactUsEmail String[]
-  studyMaterials String[]
 }
+
+// 0000000000000000000000000000000000000000
+
+model Conversation {
+  id             String @id @default(uuid())
+  userId         String
+  conversationId String
+
+  user      User      @relation(fields: [userId], references: [id])
+  messages  Message[]
+  createdAt DateTime  @default(now())
+
+  @@unique([userId, conversationId])
+}
+
+model Message {
+  id             String  @id @default(uuid())
+  content        String?
+  imageUrl       String?
+  senderId       String
+  conversationId String
+
+  isRead      Boolean   @default(false)
+  deliveredAt DateTime?
+  seenAt      DateTime?
+
+  sender       User         @relation(fields: [senderId], references: [id])
+  conversation Conversation @relation(fields: [conversationId], references: [id])
+
+  createdAt DateTime @default(now())
+
+  @@index([conversationId])
+}
+
+model Notification {
+  id     String @id @default(uuid())
+  userId String
+
+  type    String
+  title   String
+  content String?
+
+  isRead Boolean @default(false)
+
+  createdAt DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id])
+
+  @@index([userId])
+}
+
+// 0000000000000000000000000000000000000000
 
 model RefreshToken {
   id String @id @default(uuid())
@@ -219,6 +309,8 @@ model BookedLesson {
   lesson   Lesson? @relation(fields: [lessonId], references: [id], onDelete: Cascade)
   lessonId String
 
+  createdAt DateTime @default(now())
+
   @@unique([studentId, lessonId])
   @@index([lessonId, studentId])
 }
@@ -250,6 +342,8 @@ model Homework {
   teacherId String
   teacher   Teacher @relation(fields: [teacherId], references: [id], onDelete: Cascade)
 
+  // timeEnd DateTime
+
   lessonId String
   lesson   Lesson @relation(fields: [lessonId], references: [id], onDelete: Cascade)
 
@@ -278,6 +372,7 @@ model Exam {
   course   Course @relation(fields: [courseId], references: [id], onDelete: Cascade)
 
   fileUrl String
+  // duration DateTime
 
   createdAt DateTime @default(now())
 
@@ -326,6 +421,8 @@ model BookedWeekly {
   student Student @relation(fields: [studentId], references: [id], onDelete: Cascade)
 
   teacherDay TeacherDay @relation(fields: [teacherDayId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
 
   @@unique([studentId, teacherDayId])
   @@index([studentId, teacherDayId])
@@ -378,16 +475,4 @@ model Comment {
 
   @@unique([id, userId, postId])
   @@index([userId, postId])
-}
-
-model Follower {
-  id          String @id @default(uuid())
-  followingId String
-  followerId  String
-
-  following User @relation("following", fields: [followingId], references: [id], onDelete: Cascade)
-  follower  User @relation("followers", fields: [followerId], references: [id], onDelete: Cascade)
-
-  @@unique([followingId, followerId])
-  @@index([followingId, followerId])
 }

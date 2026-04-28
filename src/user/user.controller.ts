@@ -17,10 +17,8 @@ import { ProfileService } from 'src/utils/methods_handler';
 import { RoleTeacherAndCenterDto } from 'src/validators/roles.dto';
 import QueryPageDto from 'src/validators/queryPageDto';
 import { UpdateUserDto } from './dto/updateUser.dto';
-import { ApiOperation, ApiTags } from '@nestjs/swagger';
-import RolesDecorator from 'src/decorator/roles.decorator';
+import AuthDecorator from 'src/decorator/auth.decorator';
 
-@ApiTags('users')
 @Controller('users')
 export class UsersController {
   constructor(
@@ -29,8 +27,7 @@ export class UsersController {
     private ProfileService: ProfileService,
   ) {}
 
-  @ApiOperation({ summary: 'Get all users' })
-  @RolesDecorator()
+  @AuthDecorator()
   @Get()
   getAllUsers(
     @Body() getAllUsersDto: GetAllUsersDto,
@@ -39,8 +36,6 @@ export class UsersController {
     return this.usersService.getAllUsers(getAllUsersDto, queryPageDto.page);
   }
 
-  @RolesDecorator()
-  @ApiOperation({ summary: 'Get user' })
   @Get(':id')
   getUser(
     @Param('id', ParseUUIDPipe) targetUserId: string,
@@ -51,11 +46,15 @@ export class UsersController {
     return this.usersService.getUserById(targetUserId, role, req?.user?.userId);
   }
 
-  @ApiOperation({ summary: 'Update user' })
-  @Patch('')
-  updateUser(@Body() updateUserDto: UpdateUserDto, @Req() req) {
+  @Patch(':userId')
+  updateUser(
+    @Param('userId', ParseUUIDPipe) userId: string,
+    @Body() updateUserDto: UpdateUserDto,
+    @Req() req,
+  ) {
     if (req.user.role !== updateUserDto.role)
       throw new BadRequestException('You can not change your role');
+    if (req.user.userId !== userId) throw new BadRequestException('');
 
     const { userData, profileData, extraProfileData } =
       this.ProfileService.buildProfileData(req.user.role, updateUserDto);
@@ -68,7 +67,6 @@ export class UsersController {
     );
   }
 
-  @ApiOperation({ summary: 'Delete user' })
   @Delete(':userId')
   deleteUser(@Param('userId', ParseUUIDPipe) userId: string, @Req() req) {
     return this.usersService.deleteUser(req.user.userId);
