@@ -6,7 +6,6 @@ import { WinstonConfig } from './utils/logger';
 import helmet from 'helmet';
 import cookieParser from 'cookie-parser';
 import morgan from 'morgan';
-// import { WsAdapter } from '@nestjs/platform-ws';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, {
@@ -23,8 +22,6 @@ async function bootstrap() {
       transform: true,
     }),
   );
-
-  // app.useWebSocketAdapter(new WsAdapter(app));
 
   app.useGlobalFilters(new GlobalExceptionFilter());
 
