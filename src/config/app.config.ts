@@ -1,39 +1,54 @@
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { z } from 'zod';
-
-const envSchema = z.object({
-  JWT_SECRET_KEY: z.string(),
-  JWT_EXPIRES_IN: z.string().default('1d'),
-  JWT_REFRESH_SECRET_KEY: z.string(),
-  JWT_REFRESH_EXPIRES_IN: z.string().default('7d'),
-  JWT_ISSUER: z.string().default('my-app'),
-});
-
 @Injectable()
 export default class AppConfig {
   constructor(private configService: ConfigService) {}
 
   private get validatedEnv() {
-    return envSchema.parse(process.env);
+    return process.env;
   }
+
+  get nodeEnv() {
+    return this.validatedEnv.NODE_ENV as 'development' | 'production';
+  }
+
+  get host(): string {
+    return this.validatedEnv.HOST as string;
+  }
+
+  get port(): number {
+    return Number(this.validatedEnv.PORT);
+  }
+
+  get clientUrl(): string {
+    return this.validatedEnv.CLIENT_URL as string;
+  }
+
+  get DATABASE_URL(): string {
+    return this.validatedEnv.DATABASE_URL as string;
+  }
+
   get jwtSecret(): string {
-    return this.validatedEnv.JWT_SECRET_KEY;
+    return this.validatedEnv.JWT_SECRET_KEY as string;
   }
 
   get jwtExpiresIn(): string {
-    return this.validatedEnv.JWT_EXPIRES_IN;
+    return this.validatedEnv.JWT_EXPIRES_IN as string;
   }
 
   get jwtRefreshSecret(): string {
-    return this.validatedEnv.JWT_REFRESH_SECRET_KEY;
+    return this.validatedEnv.JWT_REFRESH_SECRET_KEY as string;
   }
 
   get jwtRefreshExpiresIn(): string {
-    return this.validatedEnv.JWT_REFRESH_EXPIRES_IN;
+    return this.validatedEnv.JWT_REFRESH_EXPIRES_IN as string;
   }
 
-  get jwtIssuer(): string {
-    return this.validatedEnv.JWT_ISSUER;
+  get redisHost(): string {
+    return this.validatedEnv.REDIS_HOST as string;
+  }
+
+  get redisPort(): number {
+    return Number(this.validatedEnv.REDIS_PORT) as number;
   }
 }

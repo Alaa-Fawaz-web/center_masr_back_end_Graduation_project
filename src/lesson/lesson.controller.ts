@@ -9,6 +9,7 @@ import {
   Body,
   Req,
   ParseUUIDPipe,
+  ParseIntPipe,
 } from '@nestjs/common';
 import { UpdateLessonDto } from './dto/update-lesson.dto';
 import { CreateLessonDto } from './dto/create-lesson.dto';
@@ -17,20 +18,16 @@ import RolesDecorator from 'src/decorator/roles.decorator';
 import { GetAllLessonDto } from './dto/getAllLessonDto';
 import QueryDto from 'src/validators/query.dto';
 import { TEACHER } from 'src/utils';
-import { ApiOperation, ApiTags } from '@nestjs/swagger';
 
-@ApiTags('lessons')
 @Controller('lessons')
 export class LessonController {
   constructor(private readonly lessonService: LessonService) {}
 
-  @ApiOperation({ summary: 'Get lesson' })
   @Get(':lessonId')
   getLesson(@Param('lessonId', ParseUUIDPipe) lessonId: string, @Req() req) {
     return this.lessonService.getLesson(lessonId, req.user.profileId);
   }
 
-  @ApiOperation({ summary: 'Get all lessons' })
   @Get()
   getAllLessons(
     @Query() queryDto: QueryDto,
@@ -44,7 +41,6 @@ export class LessonController {
     );
   }
 
-  @ApiOperation({ summary: 'Create lesson' })
   @RolesDecorator(TEACHER)
   @Post(':courseId')
   createLesson(
@@ -59,7 +55,6 @@ export class LessonController {
     );
   }
 
-  @ApiOperation({ summary: 'Update lesson' })
   @RolesDecorator(TEACHER)
   @Patch(':lessonId')
   updateLesson(
@@ -74,7 +69,6 @@ export class LessonController {
     );
   }
 
-  @ApiOperation({ summary: 'Delete lesson' })
   @RolesDecorator(TEACHER)
   @Delete(':lessonId')
   deleteLesson(

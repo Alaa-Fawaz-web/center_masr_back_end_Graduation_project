@@ -15,14 +15,11 @@ import { CreateHomeWorkDto } from './dto/create-home-work.dto';
 import { GetAllLessonDto } from 'src/lesson/dto/getAllLessonDto';
 import RolesDecorator from 'src/decorator/roles.decorator';
 import { TEACHER } from 'src/utils';
-import { ApiOperation, ApiTags } from '@nestjs/swagger';
 
-@ApiTags('home-works')
 @Controller('home-works')
 export class HomeWorkController {
   constructor(private readonly homeWorkService: HomeWorkService) {}
 
-  @ApiOperation({ summary: 'Get all home works' })
   @Get()
   findAll(
     @Query('courseId', ParseUUIDPipe) courseId,
@@ -36,13 +33,11 @@ export class HomeWorkController {
     );
   }
 
-  @ApiOperation({ summary: 'Get home work' })
   @Get(':homeWorkId')
   findOne(@Param('homeWorkId', ParseUUIDPipe) homeWorkId: string, @Req() req) {
     return this.homeWorkService.findOne(homeWorkId, req.user.profileId);
   }
 
-  @ApiOperation({ summary: 'Create home work' })
   @RolesDecorator(TEACHER)
   @Post(':lessonId')
   create(
@@ -59,7 +54,6 @@ export class HomeWorkController {
     );
   }
 
-  @ApiOperation({ summary: 'Update home work' })
   @RolesDecorator(TEACHER)
   @Patch(':homeWorkId')
   update(
@@ -74,7 +68,6 @@ export class HomeWorkController {
     );
   }
 
-  @ApiOperation({ summary: 'Delete home work' })
   @RolesDecorator(TEACHER)
   @Delete(':homeWorkId')
   remove(

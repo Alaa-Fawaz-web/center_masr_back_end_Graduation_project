@@ -12,21 +12,17 @@ import {
 } from '@nestjs/common';
 import { CommentService } from './comment.service';
 import { CreateCommentDto } from './dto/create-comment.dto';
-import { ApiOperation, ApiTags } from '@nestjs/swagger';
 import { UpdateCommentDto } from './dto/update-comment.dto';
 
-@ApiTags('comments')
 @Controller('comments')
 export class CommentController {
   constructor(private readonly commentService: CommentService) {}
 
-  @ApiOperation({ summary: 'Get all comments' })
   @Get(':postId')
   getAllComments(@Param('postId', ParseUUIDPipe) postId: string) {
     return this.commentService.getAllComments(postId);
   }
 
-  @ApiOperation({ summary: 'Create comment' })
   @Post(':postId')
   createComment(
     @Param('postId', ParseUUIDPipe) postId: string,
@@ -40,7 +36,6 @@ export class CommentController {
     );
   }
 
-  @ApiOperation({ summary: 'Update comment' })
   @Patch(':commentId')
   updateComment(
     @Param('commentId', ParseUUIDPipe) commentId: string,

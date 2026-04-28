@@ -1,14 +1,12 @@
-import { ApiProperty } from '@nestjs/swagger';
-import { IsUrl } from 'class-validator';
-import { Trim } from 'src/validators/is-in-set.validator';
+import { IsDateString, IsUrl } from 'class-validator';
 
 export class CreateExamDto {
-  @ApiProperty({
-    description: 'رابط ملف الامتحان (pdf, doc, أو صورة)',
-    example: 'https://example.com/exam.pdf',
-    required: true,
-  })
-  @Trim()
-  @IsUrl({}, { message: 'يجب أن يكون رابطاً صالحاً يبدأ' })
+  @IsUrl()
   fileUrl!: string;
+
+  @IsDateString()
+  timeEnd!: string;
+
+  @IsDateString()
+  duration!: string;
 }

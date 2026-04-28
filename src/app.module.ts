@@ -1,4 +1,4 @@
-import { MiddlewareConsumer, Module } from '@nestjs/common';
+import { Module } from '@nestjs/common';
 import { APP_GUARD } from '@nestjs/core';
 import { ConfigModule } from '@nestjs/config';
 import { AuthGuard } from './guard/authGuard';
@@ -19,8 +19,9 @@ import { CourseModule } from './course/course.module';
 import { ReviewModule } from './review/review.module';
 import { BookedLessonModule } from './bookedLesson/booked-lesson.module';
 import { BookedWeeklyModule } from './bookedWeekly/booked.weekly.module';
-import { NonceMiddleware } from './middleware/none';
-// import { HomeController } from './homePage.controller';
+import { TeacherCenterModule } from './teacher-center/teacher-center.module';
+import { StudentDashboardModule } from './student-dashboard/student-dashboard.module';
+import { ChatModule } from './WS_Chat/ChatModule';
 
 @Module({
   imports: [
@@ -44,8 +45,10 @@ import { NonceMiddleware } from './middleware/none';
     BookedLessonModule,
     BookedWeeklyModule,
     WeeklyScheduleModule,
+    TeacherCenterModule,
+    StudentDashboardModule,
+    ChatModule,
   ],
-  // controllers: [HomeController],
   providers: [
     {
       provide: APP_GUARD,
@@ -57,8 +60,4 @@ import { NonceMiddleware } from './middleware/none';
     },
   ],
 })
-export class AppModule {
-  configure(consumer: MiddlewareConsumer) {
-    consumer.apply(NonceMiddleware).forRoutes('*'); // أو فقط للمسار /
-  }
-}
+export class AppModule {}

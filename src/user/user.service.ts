@@ -173,24 +173,21 @@ export class UsersService {
     extraProfileData: ExtraProfileDataType,
   ) {
     return this.prisma.$transaction(async (prisma) => {
-      const updatedUser = await prisma.user.update({
+      await prisma.user.update({
         where: { id },
         data: userData,
         select: { id: true },
       });
 
-      let profileUpdateResult: any = null;
-      let extraUpdateResult: any = null;
-
       if (roleTeacherAndCenterSet.has(role)) {
-        extraUpdateResult = await prisma[this.toUpperCase(role)].update({
+        await prisma[this.toUpperCase(role)].update({
           where: { userId: id },
           data: extraProfileData as any,
           select: { id: true },
         });
       }
 
-      profileUpdateResult = await prisma[role].update({
+      await prisma[role].update({
         where: { userId: id },
         data: profileData as any,
         select: { id: true },

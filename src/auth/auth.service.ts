@@ -17,11 +17,12 @@ import { Response } from 'express';
 const secureCookieOptions = (type = 'accessToken') => {
   if (process.env.NODE_ENV === 'development') return {};
   return {
-    httpOnly: false,
-    secure: false,
+    httpOnly: true,
+    secure: true,
     maxAge: type === 'refresh' ? 7 * 24 * 60 * 60 : 1 * 24 * 60 * 60,
   };
 };
+
 @Injectable()
 export class AuthService {
   constructor(

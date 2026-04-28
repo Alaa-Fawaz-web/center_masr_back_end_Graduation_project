@@ -25,7 +25,10 @@ export class AuthGuard implements CanActivate {
     if (isPublic) return true;
 
     const req = context.switchToHttp().getRequest<Request>();
-    const token = req.cookies?.accessToken;
+    const [type, token] = req.headers?.authorization?.split(' ') || [];
+
+    if (type !== 'Bearer')
+      throw new UnauthorizedException('Invalid token type');
 
     if (!token) throw new UnauthorizedException('You are not logged in');
 

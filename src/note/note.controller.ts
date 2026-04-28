@@ -16,9 +16,7 @@ import { GetAllLessonDto } from 'src/lesson/dto/getAllLessonDto';
 import RolesDecorator from 'src/decorator/roles.decorator';
 import { TEACHER } from 'src/utils';
 import QueryDto from 'src/validators/query.dto';
-import { ApiTags } from '@nestjs/swagger';
 
-@ApiTags('Note')
 @Controller('notes')
 export class NoteController {
   constructor(private readonly noteService: NoteService) {}
