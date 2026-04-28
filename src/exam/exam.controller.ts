@@ -23,8 +23,8 @@ export class ExamController {
   @Get()
   findAll(
     @Query('courseId', ParseUUIDPipe) courseId: string,
-    @Req() req,
     @Query() getAllExamDto: GetAllLessonDto,
+    @Req() req,
   ) {
     return this.examService.findAll(
       courseId,

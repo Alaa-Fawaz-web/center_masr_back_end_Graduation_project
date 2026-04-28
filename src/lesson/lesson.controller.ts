@@ -9,7 +9,6 @@ import {
   Body,
   Req,
   ParseUUIDPipe,
-  ParseIntPipe,
 } from '@nestjs/common';
 import { UpdateLessonDto } from './dto/update-lesson.dto';
 import { CreateLessonDto } from './dto/create-lesson.dto';
@@ -31,7 +30,7 @@ export class LessonController {
   @Get()
   getAllLessons(
     @Query() queryDto: QueryDto,
-    @Body() getAllLessonsDto: GetAllLessonDto,
+    @Query() getAllLessonsDto: GetAllLessonDto,
     @Req() req,
   ) {
     return this.lessonService.getAllLessons(

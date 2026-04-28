@@ -24,7 +24,7 @@ export class WeeklyScheduleController {
   @Get(':centerId')
   getWeeklySchedule(
     @Param('centerId', ParseUUIDPipe) centerId: string,
-    @Body() getWeeklyScheduleDto: GetWeeklyScheduleDto,
+    @Query() getWeeklyScheduleDto: GetWeeklyScheduleDto,
     @Req() req,
   ) {
     const { profileId, role } = req.user;

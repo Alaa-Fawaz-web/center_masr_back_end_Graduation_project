@@ -24,7 +24,7 @@ export class NoteController {
   @Get()
   findAll(
     @Query() queryDto: QueryDto,
-    @Body() getAllNoteDto: GetAllLessonDto,
+    @Query() getAllNoteDto: GetAllLessonDto,
     @Req() req,
   ) {
     return this.noteService.findAll(

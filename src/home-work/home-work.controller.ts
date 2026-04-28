@@ -23,7 +23,7 @@ export class HomeWorkController {
   @Get()
   findAll(
     @Query('courseId', ParseUUIDPipe) courseId,
-    @Body() getAllHomeWorkDto: GetAllLessonDto,
+    @Query() getAllHomeWorkDto: GetAllLessonDto,
     @Req() req,
   ) {
     return this.homeWorkService.findAll(

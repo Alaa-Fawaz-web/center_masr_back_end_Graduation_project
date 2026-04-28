@@ -27,7 +27,7 @@ export class CourseController {
   @Get()
   findAll(
     @Query() queryDto: QueryDto,
-    @Body() getAllCourseDto: GetAllCourseDto,
+    @Query() getAllCourseDto: GetAllCourseDto,
   ) {
     const { page, id: teacherId } = queryDto;
     return this.courseService.findAll(page, teacherId, getAllCourseDto);
