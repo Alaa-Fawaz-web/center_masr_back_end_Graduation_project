@@ -219,8 +219,6 @@ model BookedLesson {
   lesson   Lesson? @relation(fields: [lessonId], references: [id], onDelete: Cascade)
   lessonId String
 
-  createdAt DateTime @default(now())
-
   @@unique([studentId, lessonId])
   @@index([lessonId, studentId])
 }
@@ -328,8 +326,6 @@ model BookedWeekly {
   student Student @relation(fields: [studentId], references: [id], onDelete: Cascade)
 
   teacherDay TeacherDay @relation(fields: [teacherDayId], references: [id], onDelete: Cascade)
-
-  createdAt DateTime @default(now())
 
   @@unique([studentId, teacherDayId])
   @@index([studentId, teacherDayId])

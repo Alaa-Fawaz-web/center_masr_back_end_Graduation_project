@@ -32,7 +32,6 @@ export class StudentDashboardService {
       skip: (page - 1) * limit,
       take: limit,
       select,
-      orderBy: { createdAt: 'desc' },
     });
 
     return sendResponsive(
@@ -76,7 +75,6 @@ export class StudentDashboardService {
       },
       skip: (page - 1) * limit,
       take: limit,
-      orderBy: { createdAt: 'desc' },
     });
 
     return sendResponsive(
