@@ -1,18 +1,16 @@
-import { Controller, Get, Res, Req } from '@nestjs/common';
-import type { Response, Request } from 'express';
+import { Controller, Get, Res } from '@nestjs/common';
+import type { Response } from 'express';
 import { ConfigService } from '@nestjs/config';
 import * as os from 'os';
-import RolesDecorator from './decorator/roles.decorator';
 import AuthDecorator from './decorator/auth.decorator';
 
 @Controller('docs')
 export class HomeController {
   constructor(private configService: ConfigService) {}
 
-  @RolesDecorator()
   @AuthDecorator()
   @Get()
-  getHome(@Res() res: Response, @Req() req: Request) {
+  getHome(@Res() res: Response) {
     const nonce = res.locals.nonce;
     const BASE_URL =
       this.configService.get('CLIENT_URL') || 'http://localhost:3000';
@@ -27,7 +25,7 @@ export class HomeController {
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
-        /* جميع الـ CSS كما في الكود السابق (تم حذفه للاختصار) */
+        /* ---------- CSS (مختصر، يمكنك نسخه من الرد السابق) ---------- */
         :root {
             --primary: #4f46e5;
             --primary-dark: #4338ca;
@@ -227,194 +225,261 @@ export class HomeController {
                 <nav><ul>
                     <li><a href="#auth">🔐 Authentication</a></li>
                     <li><a href="#users">👥 Users</a></li>
-                    <li><a href="#lessons">📖 Lessons</a></li>
-                    <li><a href="#schedule">📅 Weekly Schedule</a></li>
                     <li><a href="#posts">📝 Posts</a></li>
                     <li><a href="#comments">💬 Comments</a></li>
                     <li><a href="#likes">❤️ Likes</a></li>
                     <li><a href="#followers">👥 Followers</a></li>
-                    <li><a href="#bookings">📅 Bookings</a></li>
+                    <li><a href="#lessons">📖 Lessons</a></li>
+                    <li><a href="#courses">📚 Courses</a></li>
+                    <li><a href="#exams">📝 Exams</a></li>
+                    <li><a href="#homeworks">📓 Home Works</a></li>
+                    <li><a href="#notes">📎 Notes</a></li>
+                    <li><a href="#booked-lessons">📅 Booked Lessons</a></li>
+                    <li><a href="#weekly-schedule">🗓️ Weekly Schedule</a></li>
+                    <li><a href="#dashboard-student">📊 Student Dashboard</a></li>
                 </ul></nav>
             </aside>
-            <main class="content" id="main-content"></main>
+            <main class="content" id="main-content">
+                <!-- ==================== AUTH SECTION ==================== -->
+                <div class="section" id="auth">
+                    <div class="section-header" onclick="toggleSection(this)">
+                        <span><i class="fas fa-key"></i> Authentication</span><i class="fas fa-chevron-down"></i>
+                    </div>
+                    <div class="section-content">
+                        <div class="endpoint"><div><span class="endpoint-method method-post">POST</span><span class="endpoint-path">/auth/signup</span></div><div class="endpoint-desc">تسجيل مستخدم جديد</div><details class="details"><summary>Details & Example</summary><p><strong>Request Body:</strong></p><pre><code>{
+  "name": "John Doe",
+  "email": "john@example.com",
+  "password": "StrongPass123",
+  "role": "student",
+  "phone": "+201234567890",
+  "address": "Cairo",
+  "whatsApp": "+201234567890",
+  "imageUrl": "https://example.com/avatar.jpg"
+}</code><button class="copy-btn" onclick="copyToClipboard(this)">Copy</button></pre><p><strong>cURL:</strong></p><pre><code>curl -X POST '${BASE_URL}/api/v1/auth/signup' -H 'Content-Type: application/json' -d '{"name":"John Doe","email":"john@example.com","password":"StrongPass123","role":"student","phone":"+201234567890","address":"Cairo","whatsApp":"+201234567890","imageUrl":"https://example.com/avatar.jpg"}'</code><button class="copy-btn" onclick="copyToClipboard(this)">Copy</button></pre></details></div>
+                        <div class="endpoint"><div><span class="endpoint-method method-post">POST</span><span class="endpoint-path">/auth/login</span></div><div class="endpoint-desc">تسجيل الدخول</div><details class="details"><summary>Details & Example</summary><p><strong>Request Body:</strong></p><pre><code>{"email":"john@example.com","password":"StrongPass123"}</code><button class="copy-btn" onclick="copyToClipboard(this)">Copy</button></pre><p><strong>cURL:</strong></p><pre><code>curl -X POST '${BASE_URL}/api/v1/auth/login' -H 'Content-Type: application/json' -d '{"email":"john@example.com","password":"StrongPass123"}'</code><button class="copy-btn" onclick="copyToClipboard(this)">Copy</button></pre></details></div>
+                        <div class="endpoint"><div><span class="endpoint-method method-post">POST</span><span class="endpoint-path">/auth/logout</span><span class="badge">🔒 Auth required</span></div><div class="endpoint-desc">تسجيل الخروج</div><details class="details"><summary>Details & Example</summary><p><strong>cURL:</strong></p><pre><code>curl -X POST '${BASE_URL}/api/v1/auth/logout' -H 'Authorization: Bearer <your-token>'</code><button class="copy-btn" onclick="copyToClipboard(this)">Copy</button></pre></details></div>
+                        <div class="endpoint"><div><span class="endpoint-method method-post">POST</span><span class="endpoint-path">/auth/refresh</span><span class="badge">🔒 Auth required</span></div><div class="endpoint-desc">تحديث التوكن</div><details class="details"><summary>Details & Example</summary><p><strong>cURL:</strong></p><pre><code>curl -X POST '${BASE_URL}/api/v1/auth/refresh' -H 'Authorization: Bearer <your-token>'</code><button class="copy-btn" onclick="copyToClipboard(this)">Copy</button></pre></details></div>
+                        <div class="endpoint"><div><span class="endpoint-method method-get">GET</span><span class="endpoint-path">/auth/me</span><span class="badge">🔒 Auth required</span></div><div class="endpoint-desc">بيانات المستخدم الحالي</div><details class="details"><summary>Details & Example</summary><p><strong>cURL:</strong></p><pre><code>curl -X GET '${BASE_URL}/api/v1/auth/me' -H 'Authorization: Bearer <your-token>'</code><button class="copy-btn" onclick="copyToClipboard(this)">Copy</button></pre></details></div>
+                    </div>
+                </div>
+
+                <!-- ==================== USERS SECTION ==================== -->
+                <div class="section" id="users">
+                    <div class="section-header" onclick="toggleSection(this)">
+                        <span><i class="fas fa-users"></i> Users</span><i class="fas fa-chevron-down"></i>
+                    </div>
+                    <div class="section-content">
+                        <div class="endpoint"><div><span class="endpoint-method method-get">GET</span><span class="endpoint-path">/users</span></div><div class="endpoint-desc">جلب جميع المستخدمين (معلمين / مراكز)</div><details class="details"><summary>Details & Example</summary><p><strong>Query Parameters:</strong> <code>?page=1&limit=10</code></p><p><strong>Request Body:</strong></p><pre><code>{"role":"teacher","name":"أحمد","educationalStage":"secondary"}</code><button class="copy-btn" onclick="copyToClipboard(this)">Copy</button></pre><p><strong>cURL:</strong></p><pre><code>curl -X GET '${BASE_URL}/api/v1/users?page=1&limit=10' -H 'Content-Type: application/json' -d '{"role":"teacher","name":"أحمد","educationalStage":"secondary"}'</code><button class="copy-btn" onclick="copyToClipboard(this)">Copy</button></pre></details></div>
+                        <div class="endpoint"><div><span class="endpoint-method method-get">GET</span><span class="endpoint-path">/users/:id</span></div><div class="endpoint-desc">جلب مستخدم بواسطة المعرف</div><details class="details"><summary>Details & Example</summary><p><strong>Query Parameters:</strong> <code>?role=teacher</code></p><p><strong>cURL:</strong></p><pre><code>curl -X GET '${BASE_URL}/api/v1/users/123e4567-e89b-12d3-a456-426614174000?role=teacher'</code><button class="copy-btn" onclick="copyToClipboard(this)">Copy</button></pre></details></div>
+                        <div class="endpoint"><div><span class="endpoint-method method-patch">PATCH</span><span class="endpoint-path">/users</span><span class="badge">🔒 Auth required</span></div><div class="endpoint-desc">تحديث بيانات المستخدم الحالي</div><details class="details"><summary>Details & Example</summary><p><strong>Request Body Example (Teacher):</strong></p><pre><code>{
+  "name": "أحمد محمد الجديد",
+  "phone": "+20123456789",
+  "address": "القاهرة",
+  "bio": "مدرس رياضيات",
+  "studyMaterial": "math",
+  "experienceYear": 8,
+  "sharePrice": 200,
+  "classRooms": ["first year of secondary"]
+}</code><button class="copy-btn" onclick="copyToClipboard(this)">Copy</button></pre><p><strong>cURL:</strong></p><pre><code>curl -X PATCH '${BASE_URL}/api/v1/users' -H 'Authorization: Bearer <your-token>' -H 'Content-Type: application/json' -d '{"name":"أحمد محمد الجديد","phone":"+20123456789","address":"القاهرة","bio":"مدرس رياضيات","studyMaterial":"math","experienceYear":8,"sharePrice":200,"classRooms":["first year of secondary"]}'</code><button class="copy-btn" onclick="copyToClipboard(this)">Copy</button></pre></details></div>
+                        <div class="endpoint"><div><span class="endpoint-method method-delete">DELETE</span><span class="endpoint-path">/users/:userId</span><span class="badge">🔒 Auth required</span></div><div class="endpoint-desc">حذف حساب المستخدم</div><details class="details"><summary>Details & Example</summary><p><strong>cURL:</strong></p><pre><code>curl -X DELETE '${BASE_URL}/api/v1/users/123e4567-e89b-12d3-a456-426614174000' -H 'Authorization: Bearer <your-token>'</code><button class="copy-btn" onclick="copyToClipboard(this)">Copy</button></pre></details></div>
+                    </div>
+                </div>
+
+                <!-- ==================== POSTS SECTION ==================== -->
+                <div class="section" id="posts">
+                    <div class="section-header" onclick="toggleSection(this)">
+                        <span><i class="fas fa-newspaper"></i> Posts</span><i class="fas fa-chevron-down"></i>
+                    </div>
+                    <div class="section-content">
+                        <div class="endpoint"><div><span class="endpoint-method method-get">GET</span><span class="endpoint-path">/posts</span></div><div class="endpoint-desc">جلب جميع المنشورات</div><details class="details"><summary>Details & Example</summary><p><strong>Query Parameters:</strong> <code>?page=1</code></p><p><strong>Request Body:</strong></p><pre><code>{"role":"teacher","userId":"..."}</code><button class="copy-btn" onclick="copyToClipboard(this)">Copy</button></pre><p><strong>cURL:</strong></p><pre><code>curl -X GET '${BASE_URL}/api/v1/posts?page=1' -H 'Content-Type: application/json' -d '{"role":"teacher","userId":"..."}'</code><button class="copy-btn" onclick="copyToClipboard(this)">Copy</button></pre></details></div>
+                        <div class="endpoint"><div><span class="endpoint-method method-get">GET</span><span class="endpoint-path">/posts/:postId</span></div><div class="endpoint-desc">جلب منشور واحد</div><details class="details"><summary>Details & Example</summary><p><strong>cURL:</strong></p><pre><code>curl -X GET '${BASE_URL}/api/v1/posts/123e4567-e89b-12d3-a456-426614174000'</code><button class="copy-btn" onclick="copyToClipboard(this)">Copy</button></pre></details></div>
+                        <div class="endpoint"><div><span class="endpoint-method method-post">POST</span><span class="endpoint-path">/posts</span><span class="badge">🔒 Auth required</span></div><div class="endpoint-desc">إنشاء منشور جديد</div><details class="details"><summary>Details & Example</summary><p><strong>Request Body:</strong></p><pre><code>{"title":"إعلان مهم","content":"محتوى المنشور","imageUrl":"https://example.com/img.jpg"}</code><button class="copy-btn" onclick="copyToClipboard(this)">Copy</button></pre><p><strong>cURL:</strong></p><pre><code>curl -X POST '${BASE_URL}/api/v1/posts' -H 'Authorization: Bearer <your-token>' -H 'Content-Type: application/json' -d '{"title":"إعلان مهم","content":"محتوى المنشور","imageUrl":"https://example.com/img.jpg"}'</code><button class="copy-btn" onclick="copyToClipboard(this)">Copy</button></pre></details></div>
+                        <div class="endpoint"><div><span class="endpoint-method method-patch">PATCH</span><span class="endpoint-path">/posts/:postId</span><span class="badge">🔒 Auth required</span></div><div class="endpoint-desc">تحديث منشور</div><details class="details"><summary>Details & Example</summary><p><strong>Request Body:</strong></p><pre><code>{"title":"عنوان معدل"}</code><button class="copy-btn" onclick="copyToClipboard(this)">Copy</button></pre><p><strong>cURL:</strong></p><pre><code>curl -X PATCH '${BASE_URL}/api/v1/posts/123e4567-e89b-12d3-a456-426614174000' -H 'Authorization: Bearer <your-token>' -H 'Content-Type: application/json' -d '{"title":"عنوان معدل"}'</code><button class="copy-btn" onclick="copyToClipboard(this)">Copy</button></pre></details></div>
+                        <div class="endpoint"><div><span class="endpoint-method method-delete">DELETE</span><span class="endpoint-path">/posts/:postId</span><span class="badge">🔒 Auth required</span></div><div class="endpoint-desc">حذف منشور</div><details class="details"><summary>Details & Example</summary><p><strong>cURL:</strong></p><pre><code>curl -X DELETE '${BASE_URL}/api/v1/posts/123e4567-e89b-12d3-a456-426614174000' -H 'Authorization: Bearer <your-token>'</code><button class="copy-btn" onclick="copyToClipboard(this)">Copy</button></pre></details></div>
+                    </div>
+                </div>
+
+                <!-- ==================== COMMENTS SECTION ==================== -->
+                <div class="section" id="comments">
+                    <div class="section-header" onclick="toggleSection(this)">
+                        <span><i class="fas fa-comments"></i> Comments</span><i class="fas fa-chevron-down"></i>
+                    </div>
+                    <div class="section-content">
+                        <div class="endpoint"><div><span class="endpoint-method method-get">GET</span><span class="endpoint-path">/comments/:postId</span></div><div class="endpoint-desc">جلب تعليقات منشور</div><details class="details"><summary>Details & Example</summary><p><strong>cURL:</strong></p><pre><code>curl -X GET '${BASE_URL}/api/v1/comments/123e4567-e89b-12d3-a456-426614174000'</code><button class="copy-btn" onclick="copyToClipboard(this)">Copy</button></pre></details></div>
+                        <div class="endpoint"><div><span class="endpoint-method method-post">POST</span><span class="endpoint-path">/comments/:postId</span><span class="badge">🔒 Auth required</span></div><div class="endpoint-desc">إضافة تعليق</div><details class="details"><summary>Details & Example</summary><p><strong>Request Body:</strong></p><pre><code>{"content":"تعليق مفيد"}</code><button class="copy-btn" onclick="copyToClipboard(this)">Copy</button></pre><p><strong>cURL:</strong></p><pre><code>curl -X POST '${BASE_URL}/api/v1/comments/123e4567-e89b-12d3-a456-426614174000' -H 'Authorization: Bearer <your-token>' -H 'Content-Type: application/json' -d '{"content":"تعليق مفيد"}'</code><button class="copy-btn" onclick="copyToClipboard(this)">Copy</button></pre></details></div>
+                        <div class="endpoint"><div><span class="endpoint-method method-patch">PATCH</span><span class="endpoint-path">/comments/:commentId</span><span class="badge">🔒 Auth required</span></div><div class="endpoint-desc">تحديث تعليق</div><details class="details"><summary>Details & Example</summary><p><strong>Request Body:</strong></p><pre><code>{"content":"تعليق معدل"}</code><button class="copy-btn" onclick="copyToClipboard(this)">Copy</button></pre><p><strong>cURL:</strong></p><pre><code>curl -X PATCH '${BASE_URL}/api/v1/comments/123e4567-e89b-12d3-a456-426614174000?postId=...' -H 'Authorization: Bearer <your-token>' -H 'Content-Type: application/json' -d '{"content":"تعليق معدل"}'</code><button class="copy-btn" onclick="copyToClipboard(this)">Copy</button></pre></details></div>
+                        <div class="endpoint"><div><span class="endpoint-method method-delete">DELETE</span><span class="endpoint-path">/comments/:commentId</span><span class="badge">🔒 Auth required</span></div><div class="endpoint-desc">حذف تعليق</div><details class="details"><summary>Details & Example</summary><p><strong>cURL:</strong></p><pre><code>curl -X DELETE '${BASE_URL}/api/v1/comments/123e4567-e89b-12d3-a456-426614174000?postId=...' -H 'Authorization: Bearer <your-token>'</code><button class="copy-btn" onclick="copyToClipboard(this)">Copy</button></pre></details></div>
+                    </div>
+                </div>
+
+                <!-- ==================== LIKES SECTION ==================== -->
+                <div class="section" id="likes">
+                    <div class="section-header" onclick="toggleSection(this)">
+                        <span><i class="fas fa-heart"></i> Likes</span><i class="fas fa-chevron-down"></i>
+                    </div>
+                    <div class="section-content">
+                        <div class="endpoint"><div><span class="endpoint-method method-post">POST</span><span class="endpoint-path">/likes/:id</span><span class="badge">🔒 Auth required</span></div><div class="endpoint-desc">إضافة أو إلغاء إعجاب (بمعرف المستخدم المتابَع)</div><details class="details"><summary>Details & Example</summary><p><strong>cURL:</strong></p><pre><code>curl -X POST '${BASE_URL}/api/v1/likes/123e4567-e89b-12d3-a456-426614174000' -H 'Authorization: Bearer <your-token>'</code><button class="copy-btn" onclick="copyToClipboard(this)">Copy</button></pre></details></div>
+                    </div>
+                </div>
+
+                <!-- ==================== FOLLOWERS SECTION ==================== -->
+                <div class="section" id="followers">
+                    <div class="section-header" onclick="toggleSection(this)">
+                        <span><i class="fas fa-user-plus"></i> Followers</span><i class="fas fa-chevron-down"></i>
+                    </div>
+                    <div class="section-content">
+                        <div class="endpoint"><div><span class="endpoint-method method-post">POST</span><span class="endpoint-path">/followers/:targetUserId</span><span class="badge">🔒 Auth required</span></div><div class="endpoint-desc">متابعة / إلغاء متابعة مستخدم</div><details class="details"><summary>Details & Example</summary><p><strong>cURL:</strong></p><pre><code>curl -X POST '${BASE_URL}/api/v1/followers/123e4567-e89b-12d3-a456-426614174000' -H 'Authorization: Bearer <your-token>'</code><button class="copy-btn" onclick="copyToClipboard(this)">Copy</button></pre></details></div>
+                    </div>
+                </div>
+
+                <!-- ==================== LESSONS SECTION ==================== -->
+                <div class="section" id="lessons">
+                    <div class="section-header" onclick="toggleSection(this)">
+                        <span><i class="fas fa-book-open"></i> Lessons</span><i class="fas fa-chevron-down"></i>
+                    </div>
+                    <div class="section-content">
+                        <div class="endpoint"><div><span class="endpoint-method method-get">GET</span><span class="endpoint-path">/lessons</span></div><div class="endpoint-desc">جلب جميع الدروس</div><details class="details"><summary>Details & Example</summary><p><strong>Query Parameters:</strong> <code>?page=1&id=teacherId</code></p><p><strong>Request Body:</strong></p><pre><code>{"title":"مقدمة"}</code><button class="copy-btn" onclick="copyToClipboard(this)">Copy</button></pre><p><strong>cURL:</strong></p><pre><code>curl -X GET '${BASE_URL}/api/v1/lessons?page=1&id=123e4567...' -H 'Content-Type: application/json' -d '{"title":"مقدمة"}'</code><button class="copy-btn" onclick="copyToClipboard(this)">Copy</button></pre></details></div>
+                        <div class="endpoint"><div><span class="endpoint-method method-get">GET</span><span class="endpoint-path">/lessons/:lessonId</span></div><div class="endpoint-desc">جلب درس واحد</div><details class="details"><summary>Details & Example</summary><p><strong>cURL:</strong></p><pre><code>curl -X GET '${BASE_URL}/api/v1/lessons/123e4567-e89b-12d3-a456-426614174000'</code><button class="copy-btn" onclick="copyToClipboard(this)">Copy</button></pre></details></div>
+                        <div class="endpoint"><div><span class="endpoint-method method-post">POST</span><span class="endpoint-path">/lessons/:courseId</span><span class="badge">🔒 Auth required (Teacher)</span></div><div class="endpoint-desc">إنشاء درس جديد</div><details class="details"><summary>Details & Example</summary><p><strong>Request Body:</strong></p><pre><code>{"title":"الجبر","description":"شرح المعادلات","videoUrl":"https://example.com/video.mp4"}</code><button class="copy-btn" onclick="copyToClipboard(this)">Copy</button></pre><p><strong>cURL:</strong></p><pre><code>curl -X POST '${BASE_URL}/api/v1/lessons/123e4567-e89b-12d3-a456-426614174000' -H 'Authorization: Bearer <your-token>' -H 'Content-Type: application/json' -d '{"title":"الجبر","description":"شرح المعادلات","videoUrl":"https://example.com/video.mp4"}'</code><button class="copy-btn" onclick="copyToClipboard(this)">Copy</button></pre></details></div>
+                        <div class="endpoint"><div><span class="endpoint-method method-patch">PATCH</span><span class="endpoint-path">/lessons/:lessonId</span><span class="badge">🔒 Auth required (Teacher)</span></div><div class="endpoint-desc">تحديث درس</div><details class="details"><summary>Details & Example</summary><p><strong>Request Body:</strong></p><pre><code>{"title":"عنوان جديد"}</code><button class="copy-btn" onclick="copyToClipboard(this)">Copy</button></pre><p><strong>cURL:</strong></p><pre><code>curl -X PATCH '${BASE_URL}/api/v1/lessons/123e4567-e89b-12d3-a456-426614174000' -H 'Authorization: Bearer <your-token>' -H 'Content-Type: application/json' -d '{"title":"عنوان جديد"}'</code><button class="copy-btn" onclick="copyToClipboard(this)">Copy</button></pre></details></div>
+                        <div class="endpoint"><div><span class="endpoint-method method-delete">DELETE</span><span class="endpoint-path">/lessons/:lessonId</span><span class="badge">🔒 Auth required (Teacher)</span></div><div class="endpoint-desc">حذف درس</div><details class="details"><summary>Details & Example</summary><p><strong>cURL:</strong></p><pre><code>curl -X DELETE '${BASE_URL}/api/v1/lessons/123e4567-e89b-12d3-a456-426614174000?courseId=...' -H 'Authorization: Bearer <your-token>'</code><button class="copy-btn" onclick="copyToClipboard(this)">Copy</button></pre></details></div>
+                    </div>
+                </div>
+
+                <!-- ==================== COURSES SECTION ==================== -->
+                <div class="section" id="courses">
+                    <div class="section-header" onclick="toggleSection(this)">
+                        <span><i class="fas fa-chalkboard"></i> Courses</span><i class="fas fa-chevron-down"></i>
+                    </div>
+                    <div class="section-content">
+                        <div class="endpoint"><div><span class="endpoint-method method-get">GET</span><span class="endpoint-path">/courses</span></div><div class="endpoint-desc">جلب جميع الكورسات</div><details class="details"><summary>Details & Example</summary><p><strong>Query Parameters:</strong> <code>?page=1&id=teacherId</code></p><p><strong>Request Body:</strong></p><pre><code>{"classRoom":"first year"}</code><button class="copy-btn" onclick="copyToClipboard(this)">Copy</button></pre><p><strong>cURL:</strong></p><pre><code>curl -X GET '${BASE_URL}/api/v1/courses?page=1&id=123e4567...' -H 'Content-Type: application/json' -d '{"classRoom":"first year"}'</code><button class="copy-btn" onclick="copyToClipboard(this)">Copy</button></pre></details></div>
+                        <div class="endpoint"><div><span class="endpoint-method method-get">GET</span><span class="endpoint-path">/courses/:courseId</span></div><div class="endpoint-desc">جلب كورس واحد</div><details class="details"><summary>Details & Example</summary><p><strong>cURL:</strong></p><pre><code>curl -X GET '${BASE_URL}/api/v1/courses/123e4567-e89b-12d3-a456-426614174000'</code><button class="copy-btn" onclick="copyToClipboard(this)">Copy</button></pre></details></div>
+                        <div class="endpoint"><div><span class="endpoint-method method-post">POST</span><span class="endpoint-path">/courses</span><span class="badge">🔒 Auth required (Teacher)</span></div><div class="endpoint-desc">إنشاء كورس جديد</div><details class="details"><summary>Details & Example</summary><p><strong>Request Body:</strong></p><pre><code>{"time":"2025-12-31T14:30:00Z","studyMaterial":"Math","classRoom":"Grade 1"}</code><button class="copy-btn" onclick="copyToClipboard(this)">Copy</button></pre><p><strong>cURL:</strong></p><pre><code>curl -X POST '${BASE_URL}/api/v1/courses' -H 'Authorization: Bearer <your-token>' -H 'Content-Type: application/json' -d '{"time":"2025-12-31T14:30:00Z","studyMaterial":"Math","classRoom":"Grade 1"}'</code><button class="copy-btn" onclick="copyToClipboard(this)">Copy</button></pre></details></div>
+                        <div class="endpoint"><div><span class="endpoint-method method-patch">PATCH</span><span class="endpoint-path">/courses/:lessonId</span><span class="badge">🔒 Auth required (Teacher)</span></div><div class="endpoint-desc">تحديث كورس</div><details class="details"><summary>Details & Example</summary><p><strong>Request Body:</strong></p><pre><code>{"time":"2025-12-31T15:00:00Z"}</code><button class="copy-btn" onclick="copyToClipboard(this)">Copy</button></pre><p><strong>cURL:</strong></p><pre><code>curl -X PATCH '${BASE_URL}/api/v1/courses/123e4567...' -H 'Authorization: Bearer <your-token>' -H 'Content-Type: application/json' -d '{"time":"2025-12-31T15:00:00Z"}'</code><button class="copy-btn" onclick="copyToClipboard(this)">Copy</button></pre></details></div>
+                        <div class="endpoint"><div><span class="endpoint-method method-delete">DELETE</span><span class="endpoint-path">/courses/:courseId</span><span class="badge">🔒 Auth required (Teacher)</span></div><div class="endpoint-desc">حذف كورس</div><details class="details"><summary>Details & Example</summary><p><strong>cURL:</strong></p><pre><code>curl -X DELETE '${BASE_URL}/api/v1/courses/123e4567-e89b-12d3-a456-426614174000' -H 'Authorization: Bearer <your-token>'</code><button class="copy-btn" onclick="copyToClipboard(this)">Copy</button></pre></details></div>
+                    </div>
+                </div>
+
+                <!-- ==================== EXAMS SECTION ==================== -->
+                <div class="section" id="exams">
+                    <div class="section-header" onclick="toggleSection(this)">
+                        <span><i class="fas fa-file-alt"></i> Exams</span><i class="fas fa-chevron-down"></i>
+                    </div>
+                    <div class="section-content">
+                        <div class="endpoint"><div><span class="endpoint-method method-get">GET</span><span class="endpoint-path">/exams</span></div><div class="endpoint-desc">جلب جميع الامتحانات (يحتاج courseId query)</div><details class="details"><summary>Details & Example</summary><p><strong>Query Parameters:</strong> <code>?courseId=...</code></p><p><strong>Request Body:</strong></p><pre><code>{"title":"exam"}</code><button class="copy-btn" onclick="copyToClipboard(this)">Copy</button></pre><p><strong>cURL:</strong></p><pre><code>curl -X GET '${BASE_URL}/api/v1/exams?courseId=123e4567...' -H 'Content-Type: application/json' -d '{"title":"exam"}'</code><button class="copy-btn" onclick="copyToClipboard(this)">Copy</button></pre></details></div>
+                        <div class="endpoint"><div><span class="endpoint-method method-get">GET</span><span class="endpoint-path">/exams/:examId</span></div><div class="endpoint-desc">جلب امتحان واحد</div><details class="details"><summary>Details & Example</summary><p><strong>cURL:</strong></p><pre><code>curl -X GET '${BASE_URL}/api/v1/exams/123e4567-e89b-12d3-a456-426614174000'</code><button class="copy-btn" onclick="copyToClipboard(this)">Copy</button></pre></details></div>
+                        <div class="endpoint"><div><span class="endpoint-method method-post">POST</span><span class="endpoint-path">/exams/:lessonId</span><span class="badge">🔒 Auth required (Teacher)</span></div><div class="endpoint-desc">إنشاء امتحان</div><details class="details"><summary>Details & Example</summary><p><strong>Query Parameters:</strong> <code>?courseId=...</code></p><p><strong>Request Body:</strong></p><pre><code>{"fileUrl":"https://example.com/exam.pdf"}</code><button class="copy-btn" onclick="copyToClipboard(this)">Copy</button></pre><p><strong>cURL:</strong></p><pre><code>curl -X POST '${BASE_URL}/api/v1/exams/123e4567...?courseId=...' -H 'Authorization: Bearer <your-token>' -H 'Content-Type: application/json' -d '{"fileUrl":"https://example.com/exam.pdf"}'</code><button class="copy-btn" onclick="copyToClipboard(this)">Copy</button></pre></details></div>
+                        <div class="endpoint"><div><span class="endpoint-method method-patch">PATCH</span><span class="endpoint-path">/exams/:examId</span><span class="badge">🔒 Auth required (Teacher)</span></div><div class="endpoint-desc">تحديث الامتحان</div><details class="details"><summary>Details & Example</summary><p><strong>Request Body:</strong></p><pre><code>{"fileUrl":"https://example.com/new-exam.pdf"}</code><button class="copy-btn" onclick="copyToClipboard(this)">Copy</button></pre><p><strong>cURL:</strong></p><pre><code>curl -X PATCH '${BASE_URL}/api/v1/exams/123e4567...' -H 'Authorization: Bearer <your-token>' -H 'Content-Type: application/json' -d '{"fileUrl":"https://example.com/new-exam.pdf"}'</code><button class="copy-btn" onclick="copyToClipboard(this)">Copy</button></pre></details></div>
+                        <div class="endpoint"><div><span class="endpoint-method method-delete">DELETE</span><span class="endpoint-path">/exams/:examId</span><span class="badge">🔒 Auth required (Teacher)</span></div><div class="endpoint-desc">حذف الامتحان</div><details class="details"><summary>Details & Example</summary><p><strong>cURL:</strong></p><pre><code>curl -X DELETE '${BASE_URL}/api/v1/exams/123e4567...?courseId=...' -H 'Authorization: Bearer <your-token>'</code><button class="copy-btn" onclick="copyToClipboard(this)">Copy</button></pre></details></div>
+                    </div>
+                </div>
+
+                <!-- ==================== HOME WORKS SECTION ==================== -->
+                <div class="section" id="homeworks">
+                    <div class="section-header" onclick="toggleSection(this)">
+                        <span><i class="fas fa-home"></i> Home Works</span><i class="fas fa-chevron-down"></i>
+                    </div>
+                    <div class="section-content">
+                        <div class="endpoint"><div><span class="endpoint-method method-get">GET</span><span class="endpoint-path">/home-works</span></div><div class="endpoint-desc">جلب جميع الواجبات</div><details class="details"><summary>Details & Example</summary><p><strong>Query Parameters:</strong> <code>?courseId=...</code></p><p><strong>Request Body:</strong></p><pre><code>{"title":"hw"}</code><button class="copy-btn" onclick="copyToClipboard(this)">Copy</button></pre><p><strong>cURL:</strong></p><pre><code>curl -X GET '${BASE_URL}/api/v1/home-works?courseId=...' -H 'Content-Type: application/json' -d '{"title":"hw"}'</code><button class="copy-btn" onclick="copyToClipboard(this)">Copy</button></pre></details></div>
+                        <div class="endpoint"><div><span class="endpoint-method method-get">GET</span><span class="endpoint-path">/home-works/:homeWorkId</span></div><div class="endpoint-desc">جلب واجب واحد</div><details class="details"><summary>Details & Example</summary><p><strong>cURL:</strong></p><pre><code>curl -X GET '${BASE_URL}/api/v1/home-works/123e4567...'</code><button class="copy-btn" onclick="copyToClipboard(this)">Copy</button></pre></details></div>
+                        <div class="endpoint"><div><span class="endpoint-method method-post">POST</span><span class="endpoint-path">/home-works/:lessonId</span><span class="badge">🔒 Auth required (Teacher)</span></div><div class="endpoint-desc">إنشاء واجب</div><details class="details"><summary>Details & Example</summary><p><strong>Query Parameters:</strong> <code>?courseId=...</code></p><p><strong>Request Body:</strong></p><pre><code>{"fileUrl":"https://example.com/hw.pdf"}</code><button class="copy-btn" onclick="copyToClipboard(this)">Copy</button></pre><p><strong>cURL:</strong></p><pre><code>curl -X POST '${BASE_URL}/api/v1/home-works/123e4567...?courseId=...' -H 'Authorization: Bearer <your-token>' -H 'Content-Type: application/json' -d '{"fileUrl":"https://example.com/hw.pdf"}'</code><button class="copy-btn" onclick="copyToClipboard(this)">Copy</button></pre></details></div>
+                        <div class="endpoint"><div><span class="endpoint-method method-patch">PATCH</span><span class="endpoint-path">/home-works/:homeWorkId</span><span class="badge">🔒 Auth required (Teacher)</span></div><div class="endpoint-desc">تحديث واجب</div><details class="details"><summary>Details & Example</summary><p><strong>Request Body:</strong></p><pre><code>{"fileUrl":"https://example.com/hw-updated.pdf"}</code><button class="copy-btn" onclick="copyToClipboard(this)">Copy</button></pre><p><strong>cURL:</strong></p><pre><code>curl -X PATCH '${BASE_URL}/api/v1/home-works/123e4567...' -H 'Authorization: Bearer <your-token>' -H 'Content-Type: application/json' -d '{"fileUrl":"https://example.com/hw-updated.pdf"}'</code><button class="copy-btn" onclick="copyToClipboard(this)">Copy</button></pre></details></div>
+                        <div class="endpoint"><div><span class="endpoint-method method-delete">DELETE</span><span class="endpoint-path">/home-works/:homeWorkId</span><span class="badge">🔒 Auth required (Teacher)</span></div><div class="endpoint-desc">حذف واجب</div><details class="details"><summary>Details & Example</summary><p><strong>cURL:</strong></p><pre><code>curl -X DELETE '${BASE_URL}/api/v1/home-works/123e4567...?courseId=...' -H 'Authorization: Bearer <your-token>'</code><button class="copy-btn" onclick="copyToClipboard(this)">Copy</button></pre></details></div>
+                    </div>
+                </div>
+
+                <!-- ==================== NOTES SECTION ==================== -->
+                <div class="section" id="notes">
+                    <div class="section-header" onclick="toggleSection(this)">
+                        <span><i class="fas fa-sticky-note"></i> Notes</span><i class="fas fa-chevron-down"></i>
+                    </div>
+                    <div class="section-content">
+                        <div class="endpoint"><div><span class="endpoint-method method-get">GET</span><span class="endpoint-path">/notes</span></div><div class="endpoint-desc">جلب جميع الملاحظات</div><details class="details"><summary>Details & Example</summary><p><strong>Query Parameters:</strong> <code>?page=1&limit=10</code></p><p><strong>Request Body:</strong></p><pre><code>{"title":"note"}</code><button class="copy-btn" onclick="copyToClipboard(this)">Copy</button></pre><p><strong>cURL:</strong></p><pre><code>curl -X GET '${BASE_URL}/api/v1/notes?page=1' -H 'Content-Type: application/json' -d '{"title":"note"}'</code><button class="copy-btn" onclick="copyToClipboard(this)">Copy</button></pre></details></div>
+                        <div class="endpoint"><div><span class="endpoint-method method-get">GET</span><span class="endpoint-path">/notes/:noteId</span></div><div class="endpoint-desc">جلب ملاحظة واحدة</div><details class="details"><summary>Details & Example</summary><p><strong>cURL:</strong></p><pre><code>curl -X GET '${BASE_URL}/api/v1/notes/123e4567...'</code><button class="copy-btn" onclick="copyToClipboard(this)">Copy</button></pre></details></div>
+                        <div class="endpoint"><div><span class="endpoint-method method-post">POST</span><span class="endpoint-path">/notes/:lessonId</span><span class="badge">🔒 Auth required (Teacher)</span></div><div class="endpoint-desc">إنشاء ملاحظة</div><details class="details"><summary>Details & Example</summary><p><strong>Query Parameters:</strong> <code>?courseId=...</code></p><p><strong>Request Body:</strong></p><pre><code>{"fileUrl":"https://example.com/note.pdf"}</code><button class="copy-btn" onclick="copyToClipboard(this)">Copy</button></pre><p><strong>cURL:</strong></p><pre><code>curl -X POST '${BASE_URL}/api/v1/notes/123e4567...?courseId=...' -H 'Authorization: Bearer <your-token>' -H 'Content-Type: application/json' -d '{"fileUrl":"https://example.com/note.pdf"}'</code><button class="copy-btn" onclick="copyToClipboard(this)">Copy</button></pre></details></div>
+                        <div class="endpoint"><div><span class="endpoint-method method-patch">PATCH</span><span class="endpoint-path">/notes/:noteId</span><span class="badge">🔒 Auth required (Teacher)</span></div><div class="endpoint-desc">تحديث ملاحظة</div><details class="details"><summary>Details & Example</summary><p><strong>Request Body:</strong></p><pre><code>{"fileUrl":"https://example.com/note-updated.pdf"}</code><button class="copy-btn" onclick="copyToClipboard(this)">Copy</button></pre><p><strong>cURL:</strong></p><pre><code>curl -X PATCH '${BASE_URL}/api/v1/notes/123e4567...' -H 'Authorization: Bearer <your-token>' -H 'Content-Type: application/json' -d '{"fileUrl":"https://example.com/note-updated.pdf"}'</code><button class="copy-btn" onclick="copyToClipboard(this)">Copy</button></pre></details></div>
+                        <div class="endpoint"><div><span class="endpoint-method method-delete">DELETE</span><span class="endpoint-path">/notes/:noteId</span><span class="badge">🔒 Auth required (Teacher)</span></div><div class="endpoint-desc">حذف ملاحظة</div><details class="details"><summary>Details & Example</summary><p><strong>cURL:</strong></p><pre><code>curl -X DELETE '${BASE_URL}/api/v1/notes/123e4567...?courseId=...' -H 'Authorization: Bearer <your-token>'</code><button class="copy-btn" onclick="copyToClipboard(this)">Copy</button></pre></details></div>
+                    </div>
+                </div>
+
+                <!-- ==================== BOOKED LESSONS SECTION ==================== -->
+                <div class="section" id="booked-lessons">
+                    <div class="section-header" onclick="toggleSection(this)">
+                        <span><i class="fas fa-calendar-check"></i> Booked Lessons</span><i class="fas fa-chevron-down"></i>
+                    </div>
+                    <div class="section-content">
+                        <div class="endpoint"><div><span class="endpoint-method method-post">POST</span><span class="endpoint-path">/booked-lessons/:lessonId</span><span class="badge">🔒 Auth required (Student)</span></div><div class="endpoint-desc">حجز أو إلغاء حجز درس</div><details class="details"><summary>Details & Example</summary><p><strong>cURL:</strong></p><pre><code>curl -X POST '${BASE_URL}/api/v1/booked-lessons/123e4567-e89b-12d3-a456-426614174000' -H 'Authorization: Bearer <your-token>'</code><button class="copy-btn" onclick="copyToClipboard(this)">Copy</button></pre></details></div>
+                    </div>
+                </div>
+
+                <!-- ==================== WEEKLY SCHEDULE SECTION ==================== -->
+                <div class="section" id="weekly-schedule">
+                    <div class="section-header" onclick="toggleSection(this)">
+                        <span><i class="fas fa-calendar-week"></i> Weekly Schedule</span><i class="fas fa-chevron-down"></i>
+                    </div>
+                    <div class="section-content">
+                        <div class="endpoint"><div><span class="endpoint-method method-get">GET</span><span class="endpoint-path">/weekly-schedule/:centerId</span></div><div class="endpoint-desc">جلب الجدول الأسبوعي لمركز</div><details class="details"><summary>Details & Example</summary><p><strong>Request Body:</strong></p><pre><code>{"classRoom":"third year of secondary"}</code><button class="copy-btn" onclick="copyToClipboard(this)">Copy</button></pre><p><strong>cURL:</strong></p><pre><code>curl -X GET '${BASE_URL}/api/v1/weekly-schedule/123e4567...' -H 'Content-Type: application/json' -d '{"classRoom":"third year of secondary"}'</code><button class="copy-btn" onclick="copyToClipboard(this)">Copy</button></pre></details></div>
+                        <div class="endpoint"><div><span class="endpoint-method method-post">POST</span><span class="endpoint-path">/weekly-schedule</span><span class="badge">🔒 Auth required (Center)</span></div><div class="endpoint-desc">إنشاء جدول أسبوعي (full schedule)</div><details class="details"><summary>Details & Example</summary><p><strong>Request Body:</strong></p><pre><code>{"classRoom":"Grade 1","dataDays":[{"day":"saturday","time":"09:00","teacherId":"uuid","studyMaterial":"math"}]}</code><button class="copy-btn" onclick="copyToClipboard(this)">Copy</button></pre><p><strong>cURL:</strong></p><pre><code>curl -X POST '${BASE_URL}/api/v1/weekly-schedule' -H 'Authorization: Bearer <your-token>' -H 'Content-Type: application/json' -d '{"classRoom":"Grade 1","dataDays":[{"day":"saturday","time":"09:00","teacherId":"uuid","studyMaterial":"math"}]}'</code><button class="copy-btn" onclick="copyToClipboard(this)">Copy</button></pre></details></div>
+                        <div class="endpoint"><div><span class="endpoint-method method-post">POST</span><span class="endpoint-path">/weekly-schedule/:weeklyScheduleId</span><span class="badge">🔒 Auth required (Center)</span></div><div class="endpoint-desc">إضافة يوم دراسي إلى جدول</div><details class="details"><summary>Details & Example</summary><p><strong>Request Body:</strong></p><pre><code>{"day":"sunday","time":"10:00","teacherId":"uuid","studyMaterial":"physics"}</code><button class="copy-btn" onclick="copyToClipboard(this)">Copy</button></pre><p><strong>cURL:</strong></p><pre><code>curl -X POST '${BASE_URL}/api/v1/weekly-schedule/123e4567...' -H 'Authorization: Bearer <your-token>' -H 'Content-Type: application/json' -d '{"day":"sunday","time":"10:00","teacherId":"uuid","studyMaterial":"physics"}'</code><button class="copy-btn" onclick="copyToClipboard(this)">Copy</button></pre></details></div>
+                        <div class="endpoint"><div><span class="endpoint-method method-patch">PATCH</span><span class="endpoint-path">/weekly-schedule/:id</span><span class="badge">🔒 Auth required (Center)</span></div><div class="endpoint-desc">تحديث حصة (TeacherDay)</div><details class="details"><summary>Details & Example</summary><p><strong>Request Body:</strong></p><pre><code>{"time":"11:00","studyMaterial":"chemistry"}</code><button class="copy-btn" onclick="copyToClipboard(this)">Copy</button></pre><p><strong>cURL:</strong></p><pre><code>curl -X PATCH '${BASE_URL}/api/v1/weekly-schedule/123e4567...' -H 'Authorization: Bearer <your-token>' -H 'Content-Type: application/json' -d '{"time":"11:00","studyMaterial":"chemistry"}'</code><button class="copy-btn" onclick="copyToClipboard(this)">Copy</button></pre></details></div>
+                        <div class="endpoint"><div><span class="endpoint-method method-delete">DELETE</span><span class="endpoint-path">/weekly-schedule/:weeklyScheduleId</span><span class="badge">🔒 Auth required (Center)</span></div><div class="endpoint-desc">حذف جدول أسبوعي بالكامل</div><details class="details"><summary>Details & Example</summary><p><strong>cURL:</strong></p><pre><code>curl -X DELETE '${BASE_URL}/api/v1/weekly-schedule/123e4567...' -H 'Authorization: Bearer <your-token>'</code><button class="copy-btn" onclick="copyToClipboard(this)">Copy</button></pre></details></div>
+                        <div class="endpoint"><div><span class="endpoint-method method-delete">DELETE</span><span class="endpoint-path">/weekly-schedule/teacherDay:teacherDayId</span><span class="badge">🔒 Auth required (Center)</span></div><div class="endpoint-desc">حذف حصة معينة من الجدول</div><details class="details"><summary>Details & Example</summary><p><strong>cURL:</strong></p><pre><code>curl -X DELETE '${BASE_URL}/api/v1/weekly-schedule/teacherDay:123e4567...' -H 'Authorization: Bearer <your-token>'</code><button class="copy-btn" onclick="copyToClipboard(this)">Copy</button></pre></details></div>
+                    </div>
+                </div>
+
+                <!-- ==================== STUDENT DASHBOARD SECTION ==================== -->
+                <div class="section" id="dashboard-student">
+                    <div class="section-header" onclick="toggleSection(this)">
+                        <span><i class="fas fa-chart-line"></i> Student Dashboard</span><i class="fas fa-chevron-down"></i>
+                    </div>
+                    <div class="section-content">
+                        <div class="endpoint"><div><span class="endpoint-method method-get">GET</span><span class="endpoint-path">/dashboard-student/lessons</span><span class="badge">🔒 Auth required (Student)</span></div><div class="endpoint-desc">الدروس المحجوزة للطالب</div><details class="details"><summary>Details & Example</summary><p><strong>cURL:</strong></p><pre><code>curl -X GET '${BASE_URL}/api/v1/dashboard-student/lessons' -H 'Authorization: Bearer <your-token>'</code><button class="copy-btn" onclick="copyToClipboard(this)">Copy</button></pre></details></div>
+                        <div class="endpoint"><div><span class="endpoint-method method-get">GET</span><span class="endpoint-path">/dashboard-student/shares</span><span class="badge">🔒 Auth required (Student)</span></div><div class="endpoint-desc">الحصص المشتركة (مشاركات)</div><details class="details"><summary>Details & Example</summary><p><strong>cURL:</strong></p><pre><code>curl -X GET '${BASE_URL}/api/v1/dashboard-student/shares' -H 'Authorization: Bearer <your-token>'</code><button class="copy-btn" onclick="copyToClipboard(this)">Copy</button></pre></details></div>
+                        <div class="endpoint"><div><span class="endpoint-method method-get">GET</span><span class="endpoint-path">/dashboard-student/exam-home-worke</span><span class="badge">🔒 Auth required (Student)</span></div><div class="endpoint-desc">الامتحانات والواجبات الخاصة بالطالب</div><details class="details"><summary>Details & Example</summary><p><strong>cURL:</strong></p><pre><code>curl -X GET '${BASE_URL}/api/v1/dashboard-student/exam-home-worke' -H 'Authorization: Bearer <your-token>'</code><button class="copy-btn" onclick="copyToClipboard(this)">Copy</button></pre></details></div>
+                    </div>
+                </div>
+            </main>
         </div>
         <footer><p>API Version 1.0 | Documentation generated dynamically | © ${new Date().getFullYear()} Educational Platform</p></footer>
     </div>
     <script nonce="${nonce}">
-        // بيانات الـ endpoints
-        const endpointsData = {
-            auth: {
-                name: "Authentication",
-                icon: "fa-key",
-                endpoints: [
-                    { method: "POST", path: "/auth/signup", description: "Register a new user", requestBody: { example: { name: "John Doe", email: "john@example.com", password: "StrongPass123", role: "student", phone: "01234567890", address: "Cairo", age: 20, nationality: "Egyptian" } } },
-                    { method: "POST", path: "/auth/login", description: "Login with email and password", requestBody: { example: { email: "john@example.com", password: "StrongPass123" } } },
-                    { method: "POST", path: "/auth/logout", description: "Logout (clears cookie)", auth: true }
-                ]
-            },
-            users: {
-                name: "Users",
-                icon: "fa-users",
-                endpoints: [
-                    { method: "GET", path: "/users", description: "Get all teachers or centers with filters (public)", queryParams: "?role=teacher&name=...&page=1&limit=10" },
-                    { method: "GET", path: "/users/:id", description: "Get a specific user (requires role in body)", body: { role: "teacher" } },
-                    { method: "PATCH", path: "/users/:id", description: "Update own profile", auth: true, requestBody: { example: { name: "New Name", phone: "0111111111" } } },
-                    { method: "DELETE", path: "/users/:id", description: "Delete own account", auth: true }
-                ]
-            },
-            lessons: {
-                name: "Lessons",
-                icon: "fa-book-open",
-                endpoints: [
-                    { method: "GET", path: "/lessons", description: "Get lessons for a teacher (public)", queryParams: "?teacherId=uuid&classRoom=...&studyMaterial=...&page=1&limit=10" },
-                    { method: "GET", path: "/lessons/:id", description: "Get a single lesson (public)" },
-                    { method: "POST", path: "/lessons", description: "Create a new lesson (teacher only)", auth: true, requestBody: { example: { title: "Algebra Basics", classRoom: "first year of secondary", studyMaterial: "math", description: "Introduction to algebra", vedioUrl: "https://example.com/video.mp4" } } },
-                    { method: "PATCH", path: "/lessons/:id", description: "Update lesson (owner teacher)", auth: true, requestBody: { example: { title: "Updated Title" } } },
-                    { method: "DELETE", path: "/lessons/:id", description: "Delete lesson (owner teacher)", auth: true }
-                ]
-            },
-            schedule: {
-                name: "Weekly Schedule",
-                icon: "fa-calendar-week",
-                endpoints: [
-                    { method: "GET", path: "/weeklys", description: "Get weekly schedule", body: { centerId: "uuid", classRoom: "third year of secondary" } },
-                    { method: "POST", path: "/weeklys", description: "Create a weekly schedule (center only)", auth: true, requestBody: { example: { classRoom: "third year of secondary", dataDays: [{ day: "saturday", time: "09:00", teacherId: "uuid", studyMaterial: "math" }] } } },
-                    { method: "PATCH", path: "/weeklys/:id", description: "Update a specific teacherDay slot (center only)", auth: true, requestBody: { example: { time: "10:00", studyMaterial: "physics" } } },
-                    { method: "DELETE", path: "/weeklys/:id", description: "Delete a specific teacherDay slot (center only)", auth: true }
-                ]
-            },
-            posts: {
-                name: "Posts",
-                icon: "fa-newspaper",
-                endpoints: [
-                    { method: "GET", path: "/posts", description: "Get posts by user (public)", queryParams: "?userId=uuid&role=teacher&page=1&limit=10" },
-                    { method: "GET", path: "/posts/:id", description: "Get a single post (public)" },
-                    { method: "POST", path: "/posts", description: "Create a post (teacher/center only)", auth: true, requestBody: { example: { title: "Important Announcement", content: "We have a new course starting next week." } } },
-                    { method: "PATCH", path: "/posts/:id", description: "Update post (owner only)", auth: true, requestBody: { example: { title: "Updated Title" } } },
-                    { method: "DELETE", path: "/posts/:id", description: "Delete post (owner only)", auth: true }
-                ]
-            },
-            comments: {
-                name: "Comments",
-                icon: "fa-comments",
-                endpoints: [
-                    { method: "GET", path: "/comments", description: "Get all comments for a post (public)", queryParams: "?postId=uuid&page=1&limit=10" },
-                    { method: "GET", path: "/comments/:id", description: "Get a single comment (public)" },
-                    { method: "POST", path: "/comments", description: "Create a comment (authenticated)", auth: true, requestBody: { example: { postId: "uuid", content: "Great post!" } } },
-                    { method: "PATCH", path: "/comments/:id", description: "Update own comment", auth: true, requestBody: { example: { content: "Updated comment" } } },
-                    { method: "DELETE", path: "/comments/:id", description: "Delete own comment", auth: true }
-                ]
-            },
-            likes: {
-                name: "Likes",
-                icon: "fa-heart",
-                endpoints: [
-                    { method: "POST", path: "/likes", description: "Toggle like on a post (authenticated)", auth: true, requestBody: { example: { id: "post-uuid" } } }
-                ]
-            },
-            followers: {
-                name: "Followers",
-                icon: "fa-user-plus",
-                endpoints: [
-                    { method: "POST", path: "/followers", description: "Toggle follow a teacher/center (authenticated)", auth: true, requestBody: { example: { id: "target-user-uuid" } } }
-                ]
-            },
-            bookings: {
-                name: "Bookings",
-                icon: "fa-calendar-check",
-                endpoints: [
-                    { method: "POST", path: "/bookeds", description: "Toggle booking a teacher day (student only)", auth: true, requestBody: { example: { id: "teacher-day-uuid" } } }
-                ]
-            }
-        };
-
-        function generateCurl(endpoint) {
-            let curl = \`curl -X \${endpoint.method}\`;
-            if (endpoint.auth) curl += " -H 'Authorization: Bearer <your-token>'";
-            curl += \` '${BASE_URL}/api/v1\${endpoint.path}'\`;
-            if (endpoint.queryParams) curl = curl.replace(/'$/, \`?\${endpoint.queryParams}'\`);
-            if (endpoint.requestBody) curl += " -H 'Content-Type: application/json' -d '" + JSON.stringify(endpoint.requestBody.example, null, 2) + "'";
-            if (endpoint.body && !endpoint.requestBody) curl += " -H 'Content-Type: application/json' -d '" + JSON.stringify(endpoint.body, null, 2) + "'";
-            return curl;
-        }
-
-        function renderSections() {
-            const main = document.getElementById('main-content');
-            if (!main) return;
-            main.innerHTML = '';
-            for (const [key, section] of Object.entries(endpointsData)) {
-                const sectionDiv = document.createElement('div');
-                sectionDiv.className = 'section';
-                sectionDiv.id = key;
-                sectionDiv.innerHTML = \`
-                    <div class="section-header" onclick="toggleSection(this)">
-                        <span><i class="fas \${section.icon}"></i> \${section.name}</span>
-                        <i class="fas fa-chevron-down"></i>
-                    </div>
-                    <div class="section-content">
-                        \${section.endpoints.map(ep => {
-                            let detailsHtml = '';
-                            if (ep.queryParams) detailsHtml += \`<p><strong>Query Parameters:</strong> <code>\${ep.queryParams}</code></p>\`;
-                            if (ep.body) detailsHtml += \`<p><strong>Request Body:</strong></p><pre><code>\${JSON.stringify(ep.body, null, 2)}</code><button class="copy-btn" onclick="copyToClipboard(this)"><i class="fas fa-copy"></i> Copy</button></pre>\`;
-                            if (ep.requestBody) detailsHtml += \`<p><strong>Request Body Example:</strong></p><pre><code>\${JSON.stringify(ep.requestBody.example, null, 2)}</code><button class="copy-btn" onclick="copyToClipboard(this)"><i class="fas fa-copy"></i> Copy</button></pre>\`;
-                            const curl = generateCurl(ep);
-                            detailsHtml += \`<p><strong>cURL:</strong></p><pre><code>\${curl}</code><button class="copy-btn" onclick="copyToClipboard(this)"><i class="fas fa-copy"></i> Copy</button></pre>\`;
-                            return \`
-                                <div class="endpoint">
-                                    <div>
-                                        <span class="endpoint-method method-\${ep.method.toLowerCase()}">\${ep.method}</span>
-                                        <span class="endpoint-path">\${ep.path}</span>
-                                        \${ep.auth ? '<span class="badge"><i class="fas fa-lock"></i> Auth required</span>' : ''}
-                                    </div>
-                                    <div class="endpoint-desc">\${ep.description}</div>
-                                    <details class="details">
-                                        <summary>Details & Example</summary>
-                                        \${detailsHtml}
-                                    </details>
-                                </div>
-                            \`;
-                        }).join('')}
-                    </div>
-                \`;
-                main.appendChild(sectionDiv);
-            }
-        }
-
-        window.toggleSection = function(header) {
+        function toggleSection(header) {
             const content = header.nextElementSibling;
             content.classList.toggle('collapsed');
             const icon = header.querySelector('i:last-child');
-            if (content.classList.contains('collapsed')) {
-                icon.classList.remove('fa-chevron-down');
-                icon.classList.add('fa-chevron-right');
-            } else {
-                icon.classList.remove('fa-chevron-right');
-                icon.classList.add('fa-chevron-down');
-            }
-        };
+            icon.classList.toggle('fa-chevron-down');
+            icon.classList.toggle('fa-chevron-right');
+        }
 
-        window.copyToClipboard = function(btn) {
+        function copyToClipboard(btn) {
             const pre = btn.closest('pre');
             if (pre) {
                 const code = pre.querySelector('code');
                 const text = code ? code.innerText : pre.innerText;
                 navigator.clipboard.writeText(text).then(() => {
-                    btn.innerHTML = '<i class="fas fa-check"></i> Copied!';
-                    setTimeout(() => btn.innerHTML = '<i class="fas fa-copy"></i> Copy', 2000);
+                    btn.innerHTML = '✓ Copied!';
+                    setTimeout(() => btn.innerHTML = 'Copy', 2000);
+                }).catch(err => {
+                    alert('Failed to copy. Select and copy manually.');
                 });
             }
-        };
+        }
 
+        window.toggleSection = toggleSection;
+        window.copyToClipboard = copyToClipboard;
+
+        // التنقل السلس
         document.querySelectorAll('.sidebar a').forEach(anchor => {
             anchor.addEventListener('click', function(e) {
                 e.preventDefault();
                 const targetId = this.getAttribute('href').substring(1);
                 const target = document.getElementById(targetId);
-                if (target) target.scrollIntoView({ behavior: 'smooth' });
+                if (target) {
+                    target.scrollIntoView({ behavior: 'smooth' });
+                    history.pushState(null, null, '#' + targetId);
+                }
             });
         });
-
-        renderSections();
     </script>
 </body>
 </html>`;
@@ -426,10 +491,9 @@ export class HomeController {
     const days = Math.floor(uptime / 86400);
     const hours = Math.floor((uptime % 86400) / 3600);
     const minutes = Math.floor((uptime % 3600) / 60);
-    const uptimeStr = `${days}d ${hours}h ${minutes}m`;
     return {
       status: 'online',
-      uptime: uptimeStr,
+      uptime: `${days}d ${hours}h ${minutes}m`,
       timestamp: new Date().toISOString(),
       nodeVersion: process.version,
       env: process.env.NODE_ENV || 'development',
