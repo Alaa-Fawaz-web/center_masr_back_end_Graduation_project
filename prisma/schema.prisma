@@ -43,6 +43,14 @@ model User {
   posts    Post[]
   comments Comment[]
 
+  conversationsA Conversation[] @relation("userA")
+  conversationsB Conversation[] @relation("userB")
+
+  sentMessages     Message[] @relation("sender")
+  receivedMessages Message[] @relation("receiver")
+
+  notifications Notifications[]
+
   likes     Like[]
   followers Follower[] @relation("followers")
   following Follower[] @relation("following")
@@ -52,6 +60,50 @@ model User {
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+}
+
+model Conversation {
+  id String @id @default(cuid())
+
+  userAId String
+  userBId String
+
+  userA User @relation("userA", fields: [userAId], references: [id])
+  userB User @relation("userB", fields: [userBId], references: [id])
+
+  messages Message[]
+
+  createdAt DateTime @default(now())
+
+  @@unique([userAId, userBId])
+}
+
+model Message {
+  id      String @id @default(cuid())
+  content String
+
+  senderId       String
+  receiverId     String
+  conversationId String
+
+  sender       User         @relation("sender", fields: [senderId], references: [id])
+  receiver     User         @relation("receiver", fields: [receiverId], references: [id])
+  conversation Conversation @relation(fields: [conversationId], references: [id])
+
+  isRead Boolean @default(false)
+
+  createdAt DateTime @default(now())
+}
+
+model Notifications {
+  id      String  @id @default(cuid())
+  userId  String
+  message String
+  isRead  Boolean @default(false)
+
+  user User @relation(fields: [userId], references: [id])
+
+  createdAt DateTime @default(now())
 }
 
 model Teacher {
@@ -144,22 +196,6 @@ model RefreshToken {
   user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   token String
-}
-
-model Conversation {
-  id String @id @default(uuid())
-
-  userAId String
-  userBId String
-}
-
-model Message {
-  id String @id @default(uuid())
-
-  conversationId String
-  senderId       String
-  content        String
-  createdAt      DateTime
 }
 
 model Review {
