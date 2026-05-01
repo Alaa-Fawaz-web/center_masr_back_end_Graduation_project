@@ -66,11 +66,7 @@ export class ExamController {
 
   @RolesDecorator(TEACHER)
   @Delete(':examId')
-  remove(
-    @Param('examId', ParseUUIDPipe) examId: string,
-    @Query('courseId', ParseUUIDPipe) courseId: string,
-    @Req() req,
-  ) {
-    return this.examService.remove(req.user.profileId, examId, courseId);
+  remove(@Param('examId', ParseUUIDPipe) examId: string, @Req() req) {
+    return this.examService.remove(req.user.profileId, examId);
   }
 }

@@ -1,4 +1,6 @@
-import { IsDateString, IsNotEmpty, IsString } from 'class-validator';
+import { IsArray, IsDateString, IsNotEmpty, IsString } from 'class-validator';
+import { classRoomSet, studyMaterialSet } from 'src/utils/constant';
+import { IsInSet, Trim } from 'src/validators/is-in-set.validator';
 
 export class CreateCourseDto {
   @IsNotEmpty()
@@ -7,9 +9,14 @@ export class CreateCourseDto {
 
   @IsNotEmpty()
   @IsString()
+  title!: string;
+
+  @Trim()
+  @IsInSet(studyMaterialSet)
   studyMaterial!: string;
 
-  @IsNotEmpty()
+  @Trim()
   @IsString()
+  @IsInSet(classRoomSet, { each: true })
   classRoom!: string;
 }

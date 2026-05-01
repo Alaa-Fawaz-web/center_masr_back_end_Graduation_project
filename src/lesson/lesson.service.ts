@@ -152,28 +152,32 @@ export class LessonService {
     return sendResponsive(null, 'Lesson updated successfully');
   }
 
-  async deleteLesson(teacherId: string, lessonId: string, courseId: string) {
+  async deleteLesson(teacherId: string, lessonId: string) {
     return this.prisma.$transaction(async (prisma) => {
-      await Promise.all([
-        prisma.lesson.delete({
-          where: {
-            id_teacherId: {
-              id: lessonId,
-              teacherId,
-            },
+      const lesson = await prisma.lesson.delete({
+        where: {
+          id_teacherId: {
+            id: lessonId,
+            teacherId,
           },
-        }),
-        prisma.course.update({
-          where: {
-            id: courseId,
+        },
+        select: {
+          courseId: true,
+        },
+      });
+      if (!lesson)
+        throw new NotFoundException('Lesson not found or not authorized');
+
+      await prisma.course.update({
+        where: {
+          id: lesson.courseId,
+        },
+        data: {
+          lessonCounts: {
+            decrement: 1,
           },
-          data: {
-            lessonCounts: {
-              decrement: 1,
-            },
-          },
-        }),
-      ]);
+        },
+      });
 
       return sendResponsive(null, 'Lesson deleted successfully');
     });

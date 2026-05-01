@@ -15,6 +15,7 @@ export class CourseService {
       select: {
         id: true,
         time: true,
+        title: true,
         classRoom: true,
         studyMaterial: true,
       },
@@ -30,7 +31,11 @@ export class CourseService {
     const skip = (page - 1) * limit;
 
     const where = getAllCourseDto.classRoom
-      ? { teacherId, classRoom: getAllCourseDto.classRoom }
+      ? {
+          teacherId,
+          classRoom: getAllCourseDto.classRoom,
+          title: getAllCourseDto?.title,
+        }
       : { teacherId };
 
     const courses = await this.prisma.course.findMany({
@@ -41,6 +46,7 @@ export class CourseService {
       select: {
         id: true,
         time: true,
+        title: true,
         classRoom: true,
         studyMaterial: true,
         lessonCounts: true,
@@ -48,7 +54,7 @@ export class CourseService {
       },
     });
 
-    if (courses.length === 0) throw new NotFoundException('Courses Not Found');
+    // if (courses.length === 0) throw new NotFoundException('Courses Not Found');
 
     return sendResponsive(
       {

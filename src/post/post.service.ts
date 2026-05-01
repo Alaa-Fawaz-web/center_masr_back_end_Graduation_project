@@ -59,7 +59,7 @@ export class PostService {
     const posts = await this.prisma.post.findMany({
       where: filters,
       orderBy: { createdAt: 'desc' },
-      skip: (page - 1) * limit,
+      skip: (+page - 1) * limit,
       take: limit,
 
       select: {
@@ -87,7 +87,6 @@ export class PostService {
       },
     });
 
-    if (posts.length === 0) throw new NotFoundException('Posts not found');
     return sendResponsive(
       {
         meta: {

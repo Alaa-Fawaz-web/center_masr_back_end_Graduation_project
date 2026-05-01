@@ -70,15 +70,7 @@ export class HomeWorkController {
 
   @RolesDecorator(TEACHER)
   @Delete(':homeWorkId')
-  remove(
-    @Param('homeWorkId', ParseUUIDPipe) homeWorkId: string,
-    @Query('courseId', ParseUUIDPipe) courseId,
-    @Req() req,
-  ) {
-    return this.homeWorkService.remove(
-      homeWorkId,
-      courseId,
-      req.user.profileId,
-    );
+  remove(@Param('homeWorkId', ParseUUIDPipe) homeWorkId: string, @Req() req) {
+    return this.homeWorkService.remove(homeWorkId, req.user.profileId);
   }
 }

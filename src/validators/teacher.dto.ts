@@ -17,7 +17,7 @@ export class TeacherDto {
 
   @IsArray()
   @IsInSet(classRoomSet, { each: true })
-  classRooms?: string[];
+  classRoom?: string[];
 
   @Trim()
   @IsInSet(studyMaterialSet)

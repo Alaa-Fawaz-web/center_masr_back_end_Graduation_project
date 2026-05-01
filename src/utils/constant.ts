@@ -40,17 +40,17 @@ const classRoomArray: string[] = [
   'الصف الثالثة الإعدادية',
   'الصف الأول الثانوي',
   'الصف الثاني الثانوي',
-  'الصف الثالث الإعدادي',
+  'الصف الثالث الثانوي',
 ];
 
 const weekDays: string[] = [
-  'saturday',
-  'sunday',
-  'monday',
-  'tuesday',
-  'wednesday',
-  'thursday',
-  'friday',
+  'السبت',
+  'الأحد',
+  'الاثنين',
+  'الثلاثاء',
+  'الأربعاء',
+  'الخميس',
+  'الجمعة',
 ];
 
 const Roles = ['admin', 'teacher', 'student', 'center'];

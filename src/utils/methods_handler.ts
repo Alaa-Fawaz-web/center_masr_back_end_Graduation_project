@@ -18,7 +18,6 @@ export class ProfileService {
       imageUrl,
       whatsApp,
       classRoom,
-      classRooms,
       sharePrice,
       studySystem,
       governorate,
@@ -43,40 +42,32 @@ export class ProfileService {
 
     if (role === TEACHER) {
       profileData = this.removeNullish({
-        classRooms,
-        studySystem,
-        studyMaterial,
-      });
-
-      extraProfileData = this.removeNullish({
         bio,
         whatsApp,
+        classRoom,
         sharePrice,
+        studySystem,
+        studyMaterial,
         experienceYear,
+        educationalStage,
         educationalQualification,
       });
     }
 
     if (role === STUDENT) {
-      profileData = this.removeNullish({
-        classRoom,
-        educationalStage,
-      });
+      profileData = this.removeNullish({});
     }
 
     if (role === CENTER) {
       profileData = this.removeNullish({
-        studySystem,
-        governorate,
-        educationalStage,
-      });
-
-      extraProfileData = this.removeNullish({
         bio,
         whatsApp,
+        studySystem,
+        governorate,
         studyMaterials,
         contactUsPhone,
         contactUsEmail,
+        educationalStage,
       });
     }
 

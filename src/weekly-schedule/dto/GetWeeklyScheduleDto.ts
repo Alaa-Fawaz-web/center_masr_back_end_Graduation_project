@@ -1,7 +1,6 @@
-import { IsNotEmpty, IsString, IsUUID } from 'class-validator';
+import { PickType } from '@nestjs/mapped-types';
+import { CreateWeeklyDto } from './create-weekly-schedule.dto';
 
-export class GetWeeklyScheduleDto {
-  @IsNotEmpty()
-  @IsString()
-  classRoom!: string;
-}
+export class GetWeeklyScheduleDto extends PickType(CreateWeeklyDto, [
+  'classRoom',
+]) {}

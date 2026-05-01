@@ -43,14 +43,14 @@ export class NoteController {
   @Post(':lessonId')
   create(
     @Param('lessonId', ParseUUIDPipe) lessonId: string,
-    @Query('courseId', ParseUUIDPipe) courseId: string,
+    // @Query('courseId', ParseUUIDPipe) courseId: string,
     @Body() createNoteDto: CreateNoteDto,
     @Req() req,
   ) {
     return this.noteService.create(
       req.user.profileId,
       lessonId,
-      courseId,
+      // courseId,
       createNoteDto,
     );
   }
@@ -67,11 +67,7 @@ export class NoteController {
 
   @RolesDecorator(TEACHER)
   @Delete(':noteId')
-  remove(
-    @Param('noteId', ParseUUIDPipe) noteId: string,
-    @Query('courseId', ParseUUIDPipe) courseId: string,
-    @Req() req,
-  ) {
-    return this.noteService.remove(noteId, req.user.profileId, courseId);
+  remove(@Param('noteId', ParseUUIDPipe) noteId: string, @Req() req) {
+    return this.noteService.remove(noteId, req.user.profileId);
   }
 }

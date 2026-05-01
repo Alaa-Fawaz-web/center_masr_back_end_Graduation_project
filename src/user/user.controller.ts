@@ -15,7 +15,6 @@ import { UsersService } from './user.service';
 import { GetAllUsersDto } from './dto/getAllUsersDto';
 import { ProfileService } from 'src/utils/methods_handler';
 import { RoleTeacherAndCenterDto } from 'src/validators/roles.dto';
-import QueryPageDto from 'src/validators/queryPageDto';
 import { UpdateUserDto } from './dto/updateUser.dto';
 import AuthDecorator from 'src/decorator/auth.decorator';
 
@@ -60,12 +59,13 @@ export class UsersController {
       updateUserDto.role!,
       userData,
       profileData,
-      extraProfileData,
     );
   }
 
   @Delete(':userId')
   deleteUser(@Param('userId', ParseUUIDPipe) userId: string, @Req() req) {
+    if (req.user.userId !== userId)
+      throw new BadRequestException('You can not delete other user');
     return this.usersService.deleteUser(req.user.userId);
   }
 }

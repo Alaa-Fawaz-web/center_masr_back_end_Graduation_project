@@ -1,6 +1,7 @@
 import { IsArray, IsEmail, IsString, Matches } from 'class-validator';
 import { IsInSet, Trim, UniqueArray } from './is-in-set.validator';
 import {
+  classRoomSet,
   educationalStageSet,
   studyMaterialSet,
   studySystemSet,
@@ -22,6 +23,10 @@ export class CenterDto {
   @IsArray()
   @IsInSet(studySystemSet, { each: true })
   studySystem?: ('arabic' | 'english')[];
+
+  @IsArray()
+  @IsInSet(classRoomSet, { each: true })
+  classRoom?: string[];
 
   @IsArray()
   @UniqueArray()

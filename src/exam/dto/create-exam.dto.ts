@@ -4,9 +4,9 @@ export class CreateExamDto {
   @IsUrl()
   fileUrl!: string;
 
-  @IsDateString()
+  @IsDateString({}, { message: 'time must be a valid ISO date' })
   timeEnd!: string;
 
-  @IsDateString()
+  @IsDateString({}, { message: 'time must be a valid ISO date' })
   duration!: string;
 }

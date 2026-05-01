@@ -132,7 +132,7 @@ export class NoteService {
   async create(
     teacherId: string,
     lessonId: string,
-    courseId: string,
+    // courseId: string,
     createNoteDto: CreateNoteDto,
   ) {
     return this.prisma.$transaction(async (prisma) => {
@@ -145,6 +145,7 @@ export class NoteService {
         },
         select: {
           id: true,
+          courseId: true,
         },
       });
 
@@ -156,14 +157,14 @@ export class NoteService {
             ...createNoteDto,
             lessonId,
             teacherId,
-            courseId,
+            courseId: lesson.courseId,
           },
         }),
 
         prisma.course.update({
           where: {
             id_teacherId: {
-              id: courseId,
+              id: lesson.courseId,
               teacherId,
             },
           },
@@ -195,28 +196,31 @@ export class NoteService {
     return sendResponsive(null, 'Note updated successfully');
   }
 
-  async remove(noteId: string, teacherId: string, courseId: string) {
+  async remove(noteId: string, teacherId: string) {
     return this.prisma.$transaction(async (prisma) => {
-      await Promise.all([
-        prisma.note.delete({
-          where: {
-            id_teacherId: {
-              id: noteId,
-              teacherId,
-            },
+      const note = await prisma.note.delete({
+        where: {
+          id_teacherId: {
+            id: noteId,
+            teacherId,
           },
-        }),
-        prisma.course.update({
-          where: {
-            id: courseId,
+        },
+        select: {
+          courseId: true,
+        },
+      });
+      if (!note)
+        throw new NotFoundException('Note not found or not authorized');
+      await prisma.course.update({
+        where: {
+          id: note.courseId,
+        },
+        data: {
+          noteCounts: {
+            decrement: 1,
           },
-          data: {
-            noteCounts: {
-              decrement: 1,
-            },
-          },
-        }),
-      ]);
+        },
+      });
 
       return sendResponsive(null, 'Note deleted successfully');
     });

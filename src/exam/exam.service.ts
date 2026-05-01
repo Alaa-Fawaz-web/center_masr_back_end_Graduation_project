@@ -183,32 +183,36 @@ export class ExamService {
     return sendResponsive(null, 'Exam updated successfully');
   }
 
-  async remove(teacherId: string, examId: string, courseId: string) {
+  async remove(teacherId: string, examId: string) {
     return this.prisma.$transaction(async (prisma) => {
-      await Promise.all([
-        prisma.exam.delete({
-          where: {
-            id_teacherId: {
-              id: examId,
-              teacherId,
-            },
+      const exam = await prisma.exam.delete({
+        where: {
+          id_teacherId: {
+            id: examId,
+            teacherId,
           },
-        }),
+        },
+        select: {
+          courseId: true,
+        },
+      });
 
-        prisma.course.update({
-          where: {
-            id_teacherId: {
-              id: courseId,
-              teacherId,
-            },
+      if (!exam)
+        throw new NotFoundException('Exam not found or not authorized');
+
+      await prisma.course.update({
+        where: {
+          id_teacherId: {
+            id: exam.courseId,
+            teacherId,
           },
-          data: {
-            examCounts: {
-              decrement: 1,
-            },
+        },
+        data: {
+          examCounts: {
+            decrement: 1,
           },
-        }),
-      ]);
+        },
+      });
 
       return sendResponsive(null, 'Exam deleted successfully');
     });

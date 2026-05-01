@@ -70,15 +70,7 @@ export class LessonController {
 
   @RolesDecorator(TEACHER)
   @Delete(':lessonId')
-  deleteLesson(
-    @Param('lessonId', ParseUUIDPipe) lessonId: string,
-    @Query('courseId', ParseUUIDPipe) courseId: string,
-    @Req() req,
-  ) {
-    return this.lessonService.deleteLesson(
-      req.user.profileId,
-      lessonId,
-      courseId,
-    );
+  deleteLesson(@Param('lessonId', ParseUUIDPipe) lessonId: string, @Req() req) {
+    return this.lessonService.deleteLesson(req.user.profileId, lessonId);
   }
 }

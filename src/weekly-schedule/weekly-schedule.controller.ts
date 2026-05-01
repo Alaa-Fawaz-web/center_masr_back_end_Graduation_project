@@ -27,6 +27,8 @@ export class WeeklyScheduleController {
     @Query() getWeeklyScheduleDto: GetWeeklyScheduleDto,
     @Req() req,
   ) {
+    console.log(centerId, getWeeklyScheduleDto);
+
     const { profileId, role } = req.user;
     return this.service.getWeeklySchedule(
       centerId,

@@ -4,6 +4,6 @@ export class CreateHomeWorkDto {
   @IsUrl()
   fileUrl!: string;
 
-  @IsDateString()
+  // @IsDateString({}, { message: 'time must be a valid ISO date' })
   timeEnd!: string;
 }

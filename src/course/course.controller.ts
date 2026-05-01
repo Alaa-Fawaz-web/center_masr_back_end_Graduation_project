@@ -30,6 +30,8 @@ export class CourseController {
     @Query() getAllCourseDto: GetAllCourseDto,
   ) {
     const { page, id: teacherId } = queryDto;
+    console.log(teacherId);
+
     return this.courseService.findAll(page, teacherId, getAllCourseDto);
   }
 

@@ -1,6 +1,8 @@
 import { Transform } from 'class-transformer';
-import { IsString, Matches, IsUUID, IsIn } from 'class-validator';
+import { IsString, Matches, IsUUID, IsIn, IsDateString } from 'class-validator';
 import { weekDays } from 'src/utils';
+import { studyMaterialSet } from 'src/utils/constant';
+import { IsInSet, Trim } from 'src/validators/is-in-set.validator';
 
 export class TeacherDayDto {
   @Transform(({ value }) => value?.toLowerCase())
@@ -8,14 +10,13 @@ export class TeacherDayDto {
   @IsIn(weekDays, { message: 'Invalid day' })
   day!: string;
 
-  @Matches(/^([01]\d|2[0-3]):([0-5]\d)$/, {
-    message: 'time must be in format HH:mm (00:00 - 23:59)',
-  })
+  @IsDateString({}, { message: 'time must be a valid ISO date' })
   time!: string;
 
   @IsUUID()
   teacherId!: string;
 
-  @IsString()
+  @Trim()
+  @IsInSet(studyMaterialSet)
   studyMaterial!: string;
 }

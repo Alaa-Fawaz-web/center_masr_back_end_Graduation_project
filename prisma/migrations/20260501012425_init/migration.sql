@@ -21,12 +21,52 @@ CREATE TABLE "User" (
 );
 
 -- CreateTable
+CREATE TABLE "Conversation" (
+    "id" TEXT NOT NULL,
+    "userAId" TEXT NOT NULL,
+    "userBId" TEXT NOT NULL,
+    "lastMessage" TEXT NOT NULL,
+    "lastMessageAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+
+    CONSTRAINT "Conversation_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "Message" (
+    "id" TEXT NOT NULL,
+    "content" TEXT NOT NULL,
+    "senderId" TEXT NOT NULL,
+    "receiverId" TEXT NOT NULL,
+    "conversationId" TEXT NOT NULL,
+    "isRead" BOOLEAN NOT NULL DEFAULT false,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+
+    CONSTRAINT "Message_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "Notifications" (
+    "id" TEXT NOT NULL,
+    "userId" TEXT NOT NULL,
+    "message" TEXT NOT NULL,
+    "isRead" BOOLEAN NOT NULL DEFAULT false,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+
+    CONSTRAINT "Notifications_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
 CREATE TABLE "Teacher" (
     "id" TEXT NOT NULL,
     "userId" TEXT NOT NULL,
     "classRoom" TEXT,
     "studyMaterial" TEXT,
     "studySystem" TEXT[],
+    "educationalStage" TEXT[],
+    "star" DOUBLE PRECISION NOT NULL DEFAULT 0,
+    "bio" TEXT,
+    "experienceYear" INTEGER NOT NULL DEFAULT 0,
     "courseCounts" INTEGER NOT NULL DEFAULT 0,
     "lessonCounts" INTEGER NOT NULL DEFAULT 0,
     "noteCounts" INTEGER NOT NULL DEFAULT 0,
@@ -50,12 +90,9 @@ CREATE TABLE "Student" (
 CREATE TABLE "ProfileTeacher" (
     "id" TEXT NOT NULL,
     "userId" TEXT NOT NULL,
-    "bio" TEXT,
-    "star" DOUBLE PRECISION NOT NULL DEFAULT 0,
     "whatsApp" TEXT,
     "sharePrice" INTEGER NOT NULL DEFAULT 0,
     "centersWhereHeStudie" TEXT[],
-    "experienceYear" INTEGER NOT NULL DEFAULT 0,
     "educationalQualification" TEXT,
 
     CONSTRAINT "ProfileTeacher_pkey" PRIMARY KEY ("id")
@@ -65,9 +102,11 @@ CREATE TABLE "ProfileTeacher" (
 CREATE TABLE "Center" (
     "id" TEXT NOT NULL,
     "userId" TEXT NOT NULL,
+    "bio" TEXT,
     "governorate" TEXT,
     "educationalStage" TEXT[],
     "studySystem" TEXT[],
+    "star" DOUBLE PRECISION NOT NULL DEFAULT 0,
 
     CONSTRAINT "Center_pkey" PRIMARY KEY ("id")
 );
@@ -76,11 +115,10 @@ CREATE TABLE "Center" (
 CREATE TABLE "ProfileCenter" (
     "id" TEXT NOT NULL,
     "userId" TEXT NOT NULL,
-    "bio" TEXT,
     "whatsApp" TEXT,
     "contactUsPhone" TEXT[],
     "contactUsEmail" TEXT[],
-    "studyMaterial" TEXT[],
+    "studyMaterials" TEXT[],
 
     CONSTRAINT "ProfileCenter_pkey" PRIMARY KEY ("id")
 );
@@ -109,6 +147,7 @@ CREATE TABLE "Course" (
     "id" TEXT NOT NULL,
     "teacherId" TEXT NOT NULL,
     "time" TIMESTAMP(3) NOT NULL,
+    "title" TEXT NOT NULL,
     "studyMaterial" TEXT NOT NULL,
     "classRoom" TEXT NOT NULL,
     "studentCounts" INTEGER NOT NULL DEFAULT 0,
@@ -258,6 +297,9 @@ CREATE TABLE "Follower" (
 CREATE UNIQUE INDEX "User_email_key" ON "User"("email");
 
 -- CreateIndex
+CREATE UNIQUE INDEX "Conversation_userAId_userBId_key" ON "Conversation"("userAId", "userBId");
+
+-- CreateIndex
 CREATE UNIQUE INDEX "Teacher_userId_key" ON "Teacher"("userId");
 
 -- CreateIndex
@@ -324,10 +366,19 @@ CREATE INDEX "Homework_courseId_idx" ON "Homework"("courseId");
 CREATE UNIQUE INDEX "Homework_id_teacherId_key" ON "Homework"("id", "teacherId");
 
 -- CreateIndex
+CREATE UNIQUE INDEX "Homework_teacherId_lessonId_courseId_key" ON "Homework"("teacherId", "lessonId", "courseId");
+
+-- CreateIndex
 CREATE INDEX "Exam_courseId_idx" ON "Exam"("courseId");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "Exam_id_teacherId_key" ON "Exam"("id", "teacherId");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "Exam_teacherId_lessonId_courseId_key" ON "Exam"("teacherId", "lessonId", "courseId");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "WeeklySchedule_id_centerId_key" ON "WeeklySchedule"("id", "centerId");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "WeeklySchedule_centerId_classRoom_key" ON "WeeklySchedule"("centerId", "classRoom");
@@ -361,6 +412,24 @@ CREATE INDEX "Follower_followingId_followerId_idx" ON "Follower"("followingId", 
 
 -- CreateIndex
 CREATE UNIQUE INDEX "Follower_followingId_followerId_key" ON "Follower"("followingId", "followerId");
+
+-- AddForeignKey
+ALTER TABLE "Conversation" ADD CONSTRAINT "Conversation_userAId_fkey" FOREIGN KEY ("userAId") REFERENCES "User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "Conversation" ADD CONSTRAINT "Conversation_userBId_fkey" FOREIGN KEY ("userBId") REFERENCES "User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "Message" ADD CONSTRAINT "Message_senderId_fkey" FOREIGN KEY ("senderId") REFERENCES "User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "Message" ADD CONSTRAINT "Message_receiverId_fkey" FOREIGN KEY ("receiverId") REFERENCES "User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "Message" ADD CONSTRAINT "Message_conversationId_fkey" FOREIGN KEY ("conversationId") REFERENCES "Conversation"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "Notifications" ADD CONSTRAINT "Notifications_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "Teacher" ADD CONSTRAINT "Teacher_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE CASCADE ON UPDATE CASCADE;

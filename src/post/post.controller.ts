@@ -24,14 +24,15 @@ export class PostController {
   constructor(private readonly postService: PostService) {}
 
   @Get()
-  getAllPosts(@Query() getAllPostsDto: GetAllPostsDto, @Req() req) {
+  getAllPosts(
+    @Query('page', ParseIntPipe) page: number,
+    @Query() getAllPostsDto: GetAllPostsDto,
+    @Req() req,
+  ) {
     const { userId } = req.user as RequestType;
+    console.log(userId);
 
-    return this.postService.getAllPosts(
-      getAllPostsDto,
-      userId,
-      getAllPostsDto.page,
-    );
+    return this.postService.getAllPosts(getAllPostsDto, userId, page);
   }
 
   @Get(':postId')

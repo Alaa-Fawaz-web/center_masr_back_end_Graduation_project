@@ -56,9 +56,9 @@ export class AuthService {
       const data = { data: { userId } };
       let roleModel = await prisma[`${role}`].create(data);
 
-      if (roleTeacherAndCenterSet.has(role)) {
-        await prisma[this.toUpperCase(role)].create(data);
-      }
+      // if (roleTeacherAndCenterSet.has(role)) {
+      //   await prisma[this.toUpperCase(role)].create(data);
+      // }
 
       const payload: PayloadTokenType = {
         userId,

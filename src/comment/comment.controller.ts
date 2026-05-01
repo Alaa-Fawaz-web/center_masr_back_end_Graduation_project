@@ -26,7 +26,7 @@ export class CommentController {
   @Post(':postId')
   createComment(
     @Param('postId', ParseUUIDPipe) postId: string,
-    @Query() createCommentDto: CreateCommentDto,
+    @Body() createCommentDto: CreateCommentDto,
     @Req() req,
   ) {
     return this.commentService.createComment(

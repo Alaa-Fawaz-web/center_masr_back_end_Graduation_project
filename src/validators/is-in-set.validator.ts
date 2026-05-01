@@ -11,7 +11,7 @@ export class IsInSetConstraint implements ValidatorConstraintInterface {
   validate(value: any, args: ValidationArguments) {
     const set = args.constraints[0] as Set<string>;
 
-    if (typeof value !== 'string') return false;
+    // if (typeof value !== 'string') return false;
 
     return set.has(value.toLowerCase());
   }

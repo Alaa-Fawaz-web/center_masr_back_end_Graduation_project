@@ -181,28 +181,30 @@ export class HomeWorkService {
 
     return sendResponsive(null, 'Home Work updated successfully');
   }
-  async remove(homeWorkId: string, courseId: string, teacherId: string) {
+  async remove(homeWorkId: string, teacherId: string) {
     return this.prisma.$transaction(async (prisma) => {
-      await Promise.all([
-        prisma.homework.delete({
-          where: {
-            id_teacherId: {
-              id: homeWorkId,
-              teacherId,
-            },
+      const homeWork = await prisma.homework.delete({
+        where: {
+          id_teacherId: {
+            id: homeWorkId,
+            teacherId,
           },
-        }),
-        prisma.course.update({
-          where: {
-            id_teacherId: { id: courseId, teacherId },
+        },
+        select: {
+          courseId: true,
+        },
+      });
+
+      await prisma.course.update({
+        where: {
+          id_teacherId: { id: homeWork.courseId, teacherId },
+        },
+        data: {
+          homeworkCounts: {
+            decrement: 1,
           },
-          data: {
-            homeworkCounts: {
-              decrement: 1,
-            },
-          },
-        }),
-      ]);
+        },
+      });
 
       return sendResponsive(null, 'Homework deleted successfully');
     });

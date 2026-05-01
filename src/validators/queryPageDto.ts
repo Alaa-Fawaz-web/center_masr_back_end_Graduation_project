@@ -7,5 +7,5 @@ export default class QueryPageDto {
   @IsInt({ message: 'page must be an integer' })
   @Min(1)
   @Max(100)
-  page: number = 1;
+  page?: number;
 }

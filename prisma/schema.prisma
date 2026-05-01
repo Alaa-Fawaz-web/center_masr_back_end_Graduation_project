@@ -36,9 +36,7 @@ model User {
   student Student?
   center  Center?
 
-  refresh_token   RefreshToken?
-  profile_center  ProfileCenter?
-  profile_teacher ProfileTeacher?
+  refresh_token RefreshToken?
 
   posts    Post[]
   comments Comment[]
@@ -70,6 +68,9 @@ model Conversation {
 
   userA User @relation("userA", fields: [userAId], references: [id])
   userB User @relation("userB", fields: [userBId], references: [id])
+
+  lastMessage   String
+  lastMessageAt DateTime @default(now())
 
   messages Message[]
 
@@ -112,15 +113,23 @@ model Teacher {
   userId String @unique
   user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
 
-  classRoom     String?
-  studyMaterial String?
-  studySystem   String[]
+  classRoom                String[]
+  studyMaterial            String[]
+  studySystem              String[]
+  educationalStage         String
+  star                     Float    @default(0)
+  whatsApp                 String?
+  sharePrice               Int      @default(0)
+  centersWhereHeStudie     String[]
+  educationalQualification String?
 
-  courseCounts   Int @default(0)
-  lessonCounts   Int @default(0)
-  noteCounts     Int @default(0)
-  homeworkCounts Int @default(0)
-  examCounts     Int @default(0)
+  bio            String?
+  experienceYear Int     @default(0)
+  courseCounts   Int     @default(0)
+  lessonCounts   Int     @default(0)
+  noteCounts     Int     @default(0)
+  homeworkCounts Int     @default(0)
+  examCounts     Int     @default(0)
 
   course      Course[]
   lesson      Lesson[]
@@ -147,20 +156,12 @@ model Student {
   @@index([classRoom, educationalStage])
 }
 
-model ProfileTeacher {
-  id String @id @default(uuid())
+// model ProfileTeacher {
+//   id String @id @default(uuid())
 
-  userId String @unique
-  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
-
-  bio                      String?
-  star                     Float    @default(0)
-  whatsApp                 String?
-  sharePrice               Int      @default(0)
-  centersWhereHeStudie     String[]
-  experienceYear           Int      @default(0)
-  educationalQualification String?
-}
+//   userId String @unique
+//   user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+// }
 
 model Center {
   id String @id @default(uuid())
@@ -168,26 +169,28 @@ model Center {
   userId String @unique
   user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
 
+  bio              String?
   governorate      String?
   educationalStage String[]
   studySystem      String[]
+  classRoom        String[]
+  star             Float    @default(0)
+  whatsApp         String?
+  contactUsPhone   String[]
+  contactUsEmail   String[]
+  studyMaterials   String[]
 
   schedules  WeeklySchedule[]
   teacherDay TeacherDay[]
 }
 
-model ProfileCenter {
-  id String @id @default(uuid())
+// model ProfileCenter {
+//   id String @id @default(uuid())
 
-  userId String @unique
-  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+//   userId String @unique
+//   user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
 
-  bio            String?
-  whatsApp       String?
-  contactUsPhone String[]
-  contactUsEmail String[]
-  studyMaterials String[]
-}
+// }
 
 model RefreshToken {
   id String @id @default(uuid())
@@ -218,6 +221,7 @@ model Course {
   teacher   Teacher @relation(fields: [teacherId], references: [id], onDelete: Cascade)
 
   time           DateTime
+  title          String
   studyMaterial  String
   classRoom      String
   studentCounts  Int      @default(0)

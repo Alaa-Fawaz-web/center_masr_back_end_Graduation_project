@@ -40,13 +40,14 @@ export class UsersService {
 
     if (!roleTeacherAndCenterSet.has(role))
       throw new BadRequestException('invalid Role, must be teacher or center');
+    console.log(targetUserId, role, currentUserId);
 
-    const profileRole = `profile_${role}`;
+    // const profileRole = `profile_${role}`;
     const user = await this.prisma.user.findUnique({
       where: { id: targetUserId },
       include: {
         [role]: includeAndOmit,
-        [profileRole]: includeAndOmit,
+        // [profileRole]: includeAndOmit,
       },
       omit: { email: true, password: true, updatedAt: true },
     });
@@ -142,6 +143,9 @@ export class UsersService {
                   id: true,
                   classRoom: true,
                   studyMaterial: true,
+                  star: true,
+                  experienceYear: true,
+                  bio: true,
                 },
               }
             : undefined,
@@ -153,6 +157,8 @@ export class UsersService {
                   educationalStage: true,
                   governorate: true,
                   studySystem: true,
+                  star: true,
+                  bio: true,
                 },
               }
             : undefined,
@@ -160,8 +166,8 @@ export class UsersService {
       skip,
       take: limit,
     });
+    console.log(users);
 
-    if (users.length === 0) throw new NotFoundException('Users Not Found');
     return sendResponsive(users, 'Get All Users successfully');
   }
 
@@ -170,7 +176,7 @@ export class UsersService {
     role: Role,
     userData: UserDataType,
     profileData: ProfileDataType,
-    extraProfileData: ExtraProfileDataType,
+    // extraProfileData: ExtraProfileDataType,
   ) {
     return this.prisma.$transaction(async (prisma) => {
       await prisma.user.update({
@@ -179,13 +185,13 @@ export class UsersService {
         select: { id: true },
       });
 
-      if (roleTeacherAndCenterSet.has(role)) {
-        await prisma[this.toUpperCase(role)].update({
-          where: { userId: id },
-          data: extraProfileData as any,
-          select: { id: true },
-        });
-      }
+      // if (roleTeacherAndCenterSet.has(role)) {
+      //   await prisma[this.toUpperCase(role)].update({
+      //     where: { userId: id },
+      //     data: extraProfileData as any,
+      //     select: { id: true },
+      //   });
+      // }
 
       await prisma[role].update({
         where: { userId: id },
