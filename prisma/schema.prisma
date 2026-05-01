@@ -26,7 +26,6 @@ model User {
   password String
   role     Role
   phone    String?
-  address  String?
 
   followerCounts  Int @default(0)
   followingCounts Int @default(0)
@@ -116,7 +115,7 @@ model Teacher {
   classRoom                String[]
   studyMaterial            String[]
   studySystem              String[]
-  educationalStage         String
+  educationalStage         String?
   star                     Float    @default(0)
   whatsApp                 String?
   sharePrice               Int      @default(0)

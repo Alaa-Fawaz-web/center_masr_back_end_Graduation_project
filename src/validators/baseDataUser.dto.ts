@@ -28,9 +28,4 @@ export default class BaseDataUserDto extends EmailAndPassDto {
 
   @IsPhoneNumber('EG')
   phone!: string;
-
-  @IsString()
-  @MinLength(3)
-  @MaxLength(100)
-  address!: string;
 }

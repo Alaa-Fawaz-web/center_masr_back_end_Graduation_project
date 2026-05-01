@@ -14,7 +14,6 @@ export class ProfileService {
       bio,
       name,
       phone,
-      address,
       imageUrl,
       whatsApp,
       classRoom,
@@ -34,7 +33,6 @@ export class ProfileService {
       name,
       imageUrl,
       phone,
-      address,
     }) as UserDataType;
 
     let extraProfileData: ExtraProfileDataType = {};

@@ -100,14 +100,14 @@ export class UsersService {
       baseWhere.teacher = {
         ...(filters.classRoom && {
           classRoom: {
-            contains: filters.classRoom,
-            mode: 'insensitive',
+            has: filters.classRoom,
+            // has: 'insensitive',
           },
         }),
         ...(filters.studyMaterial && {
           studyMaterial: {
-            contains: filters.studyMaterial,
-            mode: 'insensitive',
+            has: filters.studyMaterial,
+            // mode: 'insensitive',
           },
         }),
       };
