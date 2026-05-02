@@ -32,6 +32,12 @@ export class UsersController {
     return this.usersService.getAllUsers(getAllUsersDto, getAllUsersDto.page);
   }
 
+  @AuthDecorator()
+  @Get('home-page')
+  getAllUsersHomaePage() {
+    return this.usersService.getAllUsersHomePage();
+  }
+
   @Get(':id')
   getUser(
     @Param('id', ParseUUIDPipe) targetUserId: string,

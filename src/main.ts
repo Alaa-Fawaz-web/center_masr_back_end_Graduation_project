@@ -6,6 +6,7 @@ import { WinstonConfig } from './utils/logger';
 import helmet from 'helmet';
 import cookieParser from 'cookie-parser';
 import morgan from 'morgan';
+import { ChatWsService } from './WS_Chat2/ChatWsService';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, {
@@ -22,6 +23,10 @@ async function bootstrap() {
       transform: true,
     }),
   );
+
+  const server = app.getHttpServer();
+  const wsServer = app.get(ChatWsService);
+  wsServer.setServer(server);
 
   app.useGlobalFilters(new GlobalExceptionFilter());
 

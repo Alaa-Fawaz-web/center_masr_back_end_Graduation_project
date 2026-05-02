@@ -43,16 +43,10 @@ export class NoteController {
   @Post(':lessonId')
   create(
     @Param('lessonId', ParseUUIDPipe) lessonId: string,
-    // @Query('courseId', ParseUUIDPipe) courseId: string,
     @Body() createNoteDto: CreateNoteDto,
     @Req() req,
   ) {
-    return this.noteService.create(
-      req.user.profileId,
-      lessonId,
-      // courseId,
-      createNoteDto,
-    );
+    return this.noteService.create(req.user.profileId, lessonId, createNoteDto);
   }
 
   @RolesDecorator(TEACHER)

@@ -54,8 +54,6 @@ export class CourseService {
       },
     });
 
-    // if (courses.length === 0) throw new NotFoundException('Courses Not Found');
-
     return sendResponsive(
       {
         meta: {

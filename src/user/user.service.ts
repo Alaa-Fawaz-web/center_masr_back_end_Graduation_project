@@ -1,7 +1,6 @@
 import {
   Injectable,
   NotFoundException,
-  ForbiddenException,
   BadRequestException,
 } from '@nestjs/common';
 import { PrismaService } from 'src/prisma.service';
@@ -12,11 +11,7 @@ import {
   sendResponsive,
   TEACHER,
 } from 'src/utils';
-import {
-  ExtraProfileDataType,
-  ProfileDataType,
-  UserDataType,
-} from 'src/types/type';
+import { ProfileDataType, UserDataType } from 'src/types/type';
 import { Role } from '@prisma/client';
 
 @Injectable()
@@ -42,12 +37,10 @@ export class UsersService {
       throw new BadRequestException('invalid Role, must be teacher or center');
     console.log(targetUserId, role, currentUserId);
 
-    // const profileRole = `profile_${role}`;
     const user = await this.prisma.user.findUnique({
       where: { id: targetUserId },
       include: {
         [role]: includeAndOmit,
-        // [profileRole]: includeAndOmit,
       },
       omit: { email: true, password: true, updatedAt: true },
     });
@@ -70,7 +63,6 @@ export class UsersService {
       isFollowed = !!follow;
     }
 
-    if (!user?.id) throw new NotFoundException('User Not Found');
     return sendResponsive(
       {
         ...user,
@@ -81,6 +73,54 @@ export class UsersService {
     );
   }
 
+  async getAllUsersHomePage() {
+    const [teachers, centers] = await Promise.all([
+      this.prisma.teacher.findMany({
+        take: 3,
+        select: {
+          id: true,
+          classRoom: true,
+          studyMaterial: true,
+          star: true,
+          experienceYear: true,
+          studySystem: true,
+          educationalStage: true,
+          bio: true,
+          user: {
+            select: {
+              id: true,
+              name: true,
+              imageUrl: true,
+            },
+          },
+        },
+      }),
+
+      this.prisma.center.findMany({
+        take: 3,
+        select: {
+          id: true,
+          educationalStage: true,
+          governorate: true,
+          studySystem: true,
+          star: true,
+          bio: true,
+          user: {
+            select: {
+              id: true,
+              name: true,
+              imageUrl: true,
+            },
+          },
+        },
+      }),
+    ]);
+
+    return sendResponsive(
+      { teachers, centers },
+      'Home page data fetched successfully',
+    );
+  }
   async getAllUsers(filters: GetAllUsersDto, page = 1, limit = 6) {
     const skip = (page - 1) * limit;
     const { role, name } = filters;
@@ -101,13 +141,11 @@ export class UsersService {
         ...(filters.classRoom && {
           classRoom: {
             has: filters.classRoom,
-            // has: 'insensitive',
           },
         }),
         ...(filters.studyMaterial && {
           studyMaterial: {
             has: filters.studyMaterial,
-            // mode: 'insensitive',
           },
         }),
       };
@@ -145,6 +183,8 @@ export class UsersService {
                   studyMaterial: true,
                   star: true,
                   experienceYear: true,
+                  studySystem: true,
+                  educationalStage: true,
                   bio: true,
                 },
               }
@@ -176,7 +216,6 @@ export class UsersService {
     role: Role,
     userData: UserDataType,
     profileData: ProfileDataType,
-    // extraProfileData: ExtraProfileDataType,
   ) {
     return this.prisma.$transaction(async (prisma) => {
       await prisma.user.update({
@@ -184,14 +223,6 @@ export class UsersService {
         data: userData,
         select: { id: true },
       });
-
-      // if (roleTeacherAndCenterSet.has(role)) {
-      //   await prisma[this.toUpperCase(role)].update({
-      //     where: { userId: id },
-      //     data: extraProfileData as any,
-      //     select: { id: true },
-      //   });
-      // }
 
       await prisma[role].update({
         where: { userId: id },

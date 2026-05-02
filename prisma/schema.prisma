@@ -113,7 +113,7 @@ model Teacher {
   user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   classRoom                String[]
-  studyMaterial            String[]
+  studyMaterial            String?
   studySystem              String[]
   educationalStage         String?
   star                     Float    @default(0)
@@ -155,13 +155,6 @@ model Student {
   @@index([classRoom, educationalStage])
 }
 
-// model ProfileTeacher {
-//   id String @id @default(uuid())
-
-//   userId String @unique
-//   user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
-// }
-
 model Center {
   id String @id @default(uuid())
 
@@ -182,14 +175,6 @@ model Center {
   schedules  WeeklySchedule[]
   teacherDay TeacherDay[]
 }
-
-// model ProfileCenter {
-//   id String @id @default(uuid())
-
-//   userId String @unique
-//   user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
-
-// }
 
 model RefreshToken {
   id String @id @default(uuid())

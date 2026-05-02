@@ -25,8 +25,6 @@ export class AuthGuard implements CanActivate {
     if (isPublic) return true;
 
     const req = context.switchToHttp().getRequest<Request>();
-    // const token = req.cookies?.accessToken;
-    // console.log(token);
 
     const [type, token] = req.headers?.authorization?.split(' ') || [];
     if (type !== 'Bearer')
@@ -38,7 +36,7 @@ export class AuthGuard implements CanActivate {
       const payload = await this.jwtService.verifyAsync(token, {
         secret: process.env.JWT_SECRET_KEY,
       });
-      console.log(payload);
+
       req['user'] = {
         userId: payload.userId,
         profileId: payload.profileId,

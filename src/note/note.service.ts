@@ -132,7 +132,6 @@ export class NoteService {
   async create(
     teacherId: string,
     lessonId: string,
-    // courseId: string,
     createNoteDto: CreateNoteDto,
   ) {
     return this.prisma.$transaction(async (prisma) => {
