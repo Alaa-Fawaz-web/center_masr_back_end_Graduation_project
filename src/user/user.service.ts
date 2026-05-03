@@ -75,41 +75,55 @@ export class UsersService {
 
   async getAllUsersHomePage() {
     const [teachers, centers] = await Promise.all([
-      this.prisma.teacher.findMany({
+      this.prisma.user.findMany({
+        where: {
+          role: Role.teacher,
+          teacher: {
+            isNot: null,
+          },
+        },
         take: 3,
         select: {
           id: true,
-          classRoom: true,
-          studyMaterial: true,
-          star: true,
-          experienceYear: true,
-          studySystem: true,
-          educationalStage: true,
-          bio: true,
-          user: {
+          name: true,
+          imageUrl: true,
+
+          teacher: {
             select: {
               id: true,
-              name: true,
-              imageUrl: true,
+              classRoom: true,
+              studyMaterial: true,
+              star: true,
+              experienceYear: true,
+              studySystem: true,
+              educationalStage: true,
+              bio: true,
             },
           },
         },
       }),
 
-      this.prisma.center.findMany({
+      this.prisma.user.findMany({
+        where: {
+          role: Role.center,
+          center: {
+            isNot: null,
+          },
+        },
         take: 3,
         select: {
           id: true,
-          educationalStage: true,
-          governorate: true,
-          studySystem: true,
-          star: true,
-          bio: true,
-          user: {
+          name: true,
+          imageUrl: true,
+
+          center: {
             select: {
               id: true,
-              name: true,
-              imageUrl: true,
+              educationalStage: true,
+              governorate: true,
+              studySystem: true,
+              star: true,
+              bio: true,
             },
           },
         },
@@ -121,6 +135,54 @@ export class UsersService {
       'Home page data fetched successfully',
     );
   }
+  // async getAllUsersHomePage() {
+  //   const [teachers, centers] = await Promise.all([
+  //     this.prisma.teacher.findMany({
+  //       take: 3,
+  //       select: {
+  //         id: true,
+  //         classRoom: true,
+  //         studyMaterial: true,
+  //         star: true,
+  //         experienceYear: true,
+  //         studySystem: true,
+  //         educationalStage: true,
+  //         bio: true,
+  //         user: {
+  //           select: {
+  //             id: true,
+  //             name: true,
+  //             imageUrl: true,
+  //           },
+  //         },
+  //       },
+  //     }),
+
+  //     this.prisma.center.findMany({
+  //       take: 3,
+  //       select: {
+  //         id: true,
+  //         educationalStage: true,
+  //         governorate: true,
+  //         studySystem: true,
+  //         star: true,
+  //         bio: true,
+  //         user: {
+  //           select: {
+  //             id: true,
+  //             name: true,
+  //             imageUrl: true,
+  //           },
+  //         },
+  //       },
+  //     }),
+  //   ]);
+
+  //   return sendResponsive(
+  //     { teachers, centers },
+  //     'Home page data fetched successfully',
+  //   );
+  // }
   async getAllUsers(filters: GetAllUsersDto, page = 1, limit = 6) {
     const skip = (page - 1) * limit;
     const { role, name } = filters;
