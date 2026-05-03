@@ -18,11 +18,11 @@ import { Role } from '@prisma/client';
 export class UsersService {
   constructor(private prisma: PrismaService) {}
 
-  toUpperCase(str: string) {
-    const data = str.slice(0, 1).toUpperCase() + str.slice(1);
+  // toUpperCase(str: string) {
+  //   const data = str.slice(0, 1).toUpperCase() + str.slice(1);
 
-    return `profile${data}`;
-  }
+  //   return `profile${data}`;
+  // }
   async getUserById(
     targetUserId: string,
     role: string,
