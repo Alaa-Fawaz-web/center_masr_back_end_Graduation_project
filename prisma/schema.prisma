@@ -68,12 +68,12 @@ model Conversation {
   userA User @relation("userA", fields: [userAId], references: [id])
   userB User @relation("userB", fields: [userBId], references: [id])
 
-  lastMessage   String
+  lastMessage   String   @default("")
   lastMessageAt DateTime @default(now())
 
   messages Message[]
 
-  createdAt DateTime @default(now())
+  createdAt DateTime?
 
   @@unique([userAId, userBId])
 }
@@ -163,6 +163,7 @@ model Center {
 
   bio              String?
   governorate      String?
+  address          String?
   educationalStage String[]
   studySystem      String[]
   classRoom        String[]

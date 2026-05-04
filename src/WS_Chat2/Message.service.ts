@@ -12,13 +12,30 @@ export class MessageService {
     conversationId: string,
     content: string,
   ) {
-    return await this.prisma.message.create({
-      data: {
-        senderId,
-        receiverId,
-        content,
-        conversationId,
-      },
+    console.log(conversationId);
+
+    return await this.prisma.$transaction(async (prisma) => {
+      const message = await prisma.message.create({
+        data: {
+          senderId,
+          receiverId,
+          conversationId,
+          content,
+        },
+      });
+
+      const conversation = await prisma.conversation.update({
+        where: {
+          id: conversationId,
+        },
+        data: {
+          lastMessage: content,
+          lastMessageAt: new Date(),
+        },
+      });
+      console.log(conversation, 'conversations');
+
+      return message;
     });
   }
   async getMessage(senderId: string, receiverId: string, page = 1) {

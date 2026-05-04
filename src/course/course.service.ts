@@ -21,7 +21,7 @@ export class CourseService {
       },
     });
 
-    if (!course?.id) throw new NotFoundException('Course Not Found');
+    if (!course?.id) return sendResponsive(null, 'Course not found');
 
     return sendResponsive(course, 'Get Course successfully');
   }

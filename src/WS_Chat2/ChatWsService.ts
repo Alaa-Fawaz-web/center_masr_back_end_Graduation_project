@@ -7,7 +7,11 @@ export class ChatWsService implements OnModuleInit, OnModuleDestroy {
   private wss: Server;
   private httpServer: any;
 
-  constructor(private messageService: MessageService) {}
+  constructor(
+    private messageService: MessageService,
+
+    // private conversationsService: ConversationsService,
+  ) {}
   private users = new Map<string, Set<WebSocket>>();
   private conversations = new Map<string, Set<string>>();
   private userContacts = new Map<string, Set<string>>();
@@ -193,6 +197,13 @@ export class ChatWsService implements OnModuleInit, OnModuleDestroy {
         conversationId,
         content,
       );
+
+      // await this.conversations.createMessage(
+      //   userId,
+      //   receiverId,
+      //   conversationId,
+      //   content,
+      // );
 
       [userId, receiverId].forEach((uid) => {
         this.sendToUser(uid, {

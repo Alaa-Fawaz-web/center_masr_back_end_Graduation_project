@@ -34,27 +34,24 @@ async function bootstrap() {
 
   app.use(morgan('dev'));
 
+  // app.enableCors({
+  //   origin: ['https://center-masr.vercel.app'],
+  //   methods: 'GET,POST,PUT,DELETE,PATCH',
+  //   credentials: true,
+  // });
   app.enableCors({
-    origin: ['https://center-masr.vercel.app'],
+    origin: (origin, callback) => {
+      const allowedOrigins = [process.env.CLIENT_URL];
+
+      if (!origin || allowedOrigins.includes(origin)) {
+        callback(null, true);
+      } else {
+        callback(null, false);
+      }
+    },
     methods: 'GET,POST,PUT,DELETE,PATCH',
     credentials: true,
   });
-
-  // app.enableCors({
-  //   origin: (origin, callback) => {
-  //     const allowedOrigins =
-  //       process.env.NODE_ENV === 'production'
-  //         ? [process.env.CLIENT_URL]
-  //         : ['http://localhost:3000'];
-
-  //     if (!origin || allowedOrigins.includes(origin)) {
-  //       callback(null, true);
-  //     } else {
-  //       callback(null, false);
-  //     }
-  //   },
-  //   credentials: true,
-  // });
 
   app.enableShutdownHooks();
 
