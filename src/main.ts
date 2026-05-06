@@ -7,6 +7,7 @@ import helmet from 'helmet';
 import cookieParser from 'cookie-parser';
 import morgan from 'morgan';
 import { ChatWsService } from './WS_Chat2/ChatWsService';
+import { json } from 'express';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, {
@@ -20,6 +21,7 @@ async function bootstrap() {
   app.useGlobalPipes(
     new ValidationPipe({
       whitelist: true,
+
       transform: true,
     }),
   );
@@ -34,15 +36,18 @@ async function bootstrap() {
 
   app.use(morgan('dev'));
 
+  app.use(json());
   // app.enableCors({
   //   origin: ['https://center-masr.vercel.app'],
   //   methods: 'GET,POST,PUT,DELETE,PATCH',
   //   credentials: true,
   // });
-
   app.enableCors({
     origin: (origin, callback) => {
-      const allowedOrigins = [process.env.CLIENT_URL];
+      const allowedOrigins =
+        process.env.NODE_ENV === 'production'
+          ? [process.env.CLIENT_URL]
+          : ['http://localhost:3000'];
 
       if (!origin || allowedOrigins.includes(origin)) {
         callback(null, true);

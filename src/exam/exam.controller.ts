@@ -42,16 +42,10 @@ export class ExamController {
   @Post(':lessonId')
   create(
     @Param('lessonId', ParseUUIDPipe) lessonId: string,
-    @Query('courseId', ParseUUIDPipe) courseId: string,
     @Body() createExamDto: CreateExamDto,
     @Req() req,
   ) {
-    return this.examService.create(
-      req.user.profileId,
-      lessonId,
-      courseId,
-      createExamDto,
-    );
+    return this.examService.create(req.user.profileId, lessonId, createExamDto);
   }
 
   @RolesDecorator(TEACHER)

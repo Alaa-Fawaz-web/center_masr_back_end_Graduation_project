@@ -23,6 +23,8 @@ import { TeacherCenterModule } from './teacher-center/teacher-center.module';
 import { StudentDashboardModule } from './student-dashboard/student-dashboard.module';
 import { HomeController } from './homePage.controller';
 import { ChatModule } from './WS_Chat2/ChatModule';
+import { TeacherDashboardModule } from './teacher-dashboard/teacher-dashboard.module';
+import { CenterDashboardModule } from './center-dashboard/center-dashboard.module';
 
 @Module({
   imports: [
@@ -49,6 +51,8 @@ import { ChatModule } from './WS_Chat2/ChatModule';
     TeacherCenterModule,
     StudentDashboardModule,
     ChatModule,
+    TeacherDashboardModule,
+    CenterDashboardModule,
   ],
   controllers: [HomeController],
 

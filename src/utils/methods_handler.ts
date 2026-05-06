@@ -9,72 +9,74 @@ import {
 
 @Injectable()
 export class ProfileService {
-  buildProfileData(role: string, data: UpdateUserDto) {
-    const {
-      bio,
-      name,
-      phone,
-      imageUrl,
-      whatsApp,
-      classRoom,
-      sharePrice,
-      studySystem,
-      governorate,
-      studyMaterial,
-      studyMaterials,
-      experienceYear,
-      contactUsPhone,
-      contactUsEmail,
-      educationalStage,
-      educationalQualification,
-    } = data;
+  // buildProfileData(role: string, data: UpdateUserDto) {
+  //   const {
+  //     bio,
+  //     name,
+  //     phone,
+  //     imageUrl,
+  //     whatsApp,
+  //     classRoom,
+  //     sharePrice,
+  //     studySystem,
+  //     location,
+  //     governorate,
+  //     studyMaterial,
+  //     studyMaterials,
+  //     experienceYear,
+  //     contactUsPhone,
+  //     contactUsEmail,
+  //     educationalStage,
+  //     educationalQualification,
+  //   } = data;
 
-    const userData = this.removeNullish({
-      name,
-      imageUrl,
-      phone,
-    }) as UserDataType;
+  //   const userData = this.removeNullish({
+  //     name,
+  //     imageUrl,
+  //     phone,
+  //   }) as UserDataType;
 
-    let extraProfileData: ExtraProfileDataType = {};
-    let profileData: ProfileDataType = {};
+  //   let extraProfileData: ExtraProfileDataType = {};
+  //   let profileData: ProfileDataType = {};
 
-    if (role === TEACHER) {
-      profileData = this.removeNullish({
-        bio,
-        whatsApp,
-        classRoom,
-        sharePrice,
-        studySystem,
-        studyMaterial,
-        experienceYear,
-        educationalStage,
-        educationalQualification,
-      });
-    }
+  //   if (role === TEACHER) {
+  //     profileData = this.removeNullish({
+  //       bio,
+  //       whatsApp,
+  //       classRoom,
+  //       sharePrice,
+  //       studySystem,
+  //       studyMaterial,
+  //       experienceYear,
+  //       educationalStage,
+  //       educationalQualification,
+  //     });
+  //   }
 
-    if (role === STUDENT) {
-      profileData = this.removeNullish({});
-    }
+  //   if (role === STUDENT) {
+  //     profileData = this.removeNullish({});
+  //   }
 
-    if (role === CENTER) {
-      profileData = this.removeNullish({
-        bio,
-        whatsApp,
-        studySystem,
-        governorate,
-        studyMaterials,
-        contactUsPhone,
-        contactUsEmail,
-        educationalStage,
-      });
-    }
+  //   if (role === CENTER) {
+  //     profileData = this.removeNullish({
+  //       bio,
+  //       whatsApp,
+  //       location,
+  //       studySystem,
+  //       governorate,
+  //       studyMaterials,
+  //       contactUsPhone,
+  //       contactUsEmail,
+  //       educationalStage,
+  //     });
+  //   }
 
-    return {
-      userData,
-      profileData,
-      extraProfileData,
-    };
-  }
+  //   return {
+  //     userData,
+  //     profileData,
+  //     extraProfileData,
+  //   };
+  // }
 
   removeNullish<T extends Record<string, any>>(obj: T): Partial<T> {
     const cleaned: Partial<T> = {};

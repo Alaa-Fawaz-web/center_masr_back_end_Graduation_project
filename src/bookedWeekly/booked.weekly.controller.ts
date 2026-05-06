@@ -1,4 +1,13 @@
-import { Controller, Post, Param, Req, ParseUUIDPipe } from '@nestjs/common';
+import {
+  Controller,
+  Post,
+  Param,
+  Req,
+  ParseUUIDPipe,
+  Body,
+  ParseDatePipe,
+  Query,
+} from '@nestjs/common';
 import { BookedWeeklyService } from './booked.weekly.service';
 import RolesDecorator from 'src/decorator/roles.decorator';
 import { STUDENT } from 'src/utils';
@@ -8,12 +17,14 @@ export class BookedWeeklyController {
   constructor(private readonly bookedService: BookedWeeklyService) {}
 
   @RolesDecorator(STUDENT)
-  @Post(':teacherDayId')
+  @Post(':centerId')
   toggleBooked(
-    @Param('teacherDayId', ParseUUIDPipe) teacherDayId: string,
+    @Param('centerId', ParseUUIDPipe) centerId: string,
+    @Query('teacherDayId', ParseUUIDPipe) teacherDayId: string,
     @Req() req,
   ) {
     return this.bookedService.toggleBookedStudent(
+      centerId,
       req.user.profileId,
       teacherDayId,
     );

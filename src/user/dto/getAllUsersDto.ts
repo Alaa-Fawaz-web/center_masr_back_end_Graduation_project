@@ -16,7 +16,7 @@ export class GetAllUsersDto extends QueryPageDto {
 
   @IsOptional()
   @IsString()
-  governorate?: string;
+  location?: string;
 
   @IsOptional()
   @IsString()

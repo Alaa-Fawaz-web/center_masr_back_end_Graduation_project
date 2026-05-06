@@ -18,6 +18,7 @@ import { CreatePostDto } from './dto/createPost.dto';
 import { CENTER, TEACHER } from 'src/utils';
 import { UpdatePostDto } from './dto/updatePost.dto';
 import RolesDecorator from 'src/decorator/roles.decorator';
+import QueryPageDto from 'src/validators/queryPageDto';
 
 @Controller('posts')
 export class PostController {
@@ -25,14 +26,14 @@ export class PostController {
 
   @Get()
   getAllPosts(
-    @Query('page', ParseIntPipe) page: number,
+    @Query('page') page: QueryPageDto,
     @Query() getAllPostsDto: GetAllPostsDto,
     @Req() req,
   ) {
     const { userId } = req.user as RequestType;
     console.log(userId);
 
-    return this.postService.getAllPosts(getAllPostsDto, userId, page);
+    return this.postService.getAllPosts(getAllPostsDto, userId, page.page);
   }
 
   @Get(':postId')

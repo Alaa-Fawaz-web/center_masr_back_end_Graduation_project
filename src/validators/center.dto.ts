@@ -1,4 +1,10 @@
-import { IsArray, IsEmail, IsString, Matches } from 'class-validator';
+import {
+  IsArray,
+  IsEmail,
+  IsPhoneNumber,
+  IsString,
+  Matches,
+} from 'class-validator';
 import { IsInSet, Trim, UniqueArray } from './is-in-set.validator';
 import {
   classRoomSet,
@@ -8,6 +14,10 @@ import {
 } from 'src/utils/constant';
 
 export class CenterDto {
+  @Trim()
+  @IsPhoneNumber('EG', { message: 'invalid Egyptian phone number' })
+  whatsPhone?: string;
+
   @Trim()
   @IsString()
   name?: string;
@@ -20,21 +30,27 @@ export class CenterDto {
   @IsString()
   governorate?: string;
 
-  @IsArray()
-  @IsInSet(studySystemSet, { each: true })
-  studySystem?: ('arabic' | 'english')[];
+  @Trim()
+  @IsString()
+  location?: string;
 
   @IsArray()
-  @IsInSet(classRoomSet, { each: true })
-  classRoom?: string[];
+  @IsInSet(studySystemSet, { each: true })
+  studySystem?: ('عربي' | 'انجليزي')[];
+
+  // @IsArray()
+  // @IsInSet(classRoomSet, { each: true })
+  // classRoom?: string[];
 
   @IsArray()
   @UniqueArray()
   @IsInSet(studyMaterialSet, { each: true })
   studyMaterials?: string[];
 
+  // { message: 'invalid Egyptian phone number' },
   @IsArray()
-  @Matches(/^01[0-9]{9}$/, { each: true })
+  @IsPhoneNumber('EG', { each: true, message: 'invalid Egyptian phone number' })
+  // @Matches(/^01[0-9]{9}$/, { each: true })
   contactUsPhone?: string[];
 
   @IsArray()
@@ -42,7 +58,7 @@ export class CenterDto {
   @IsInSet(educationalStageSet, { each: true })
   educationalStage?: string[];
 
-  @IsArray()
-  @IsEmail({}, { each: true })
-  contactUsEmail?: string[];
+  @Trim()
+  @IsEmail()
+  contactUsEmail?: string;
 }

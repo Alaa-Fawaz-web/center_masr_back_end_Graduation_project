@@ -34,7 +34,6 @@ export class WeeklyScheduleService {
             id: true,
             day: true,
             time: true,
-            studyMaterial: true,
             centerId: true,
             teacher: {
               select: {
@@ -66,17 +65,13 @@ export class WeeklyScheduleService {
       schedule[day] = [];
     });
 
-    if (!weeklySchedule)
-      throw new NotFoundException('Weekly schedule not found');
-
-    weeklySchedule.teacherDays.forEach((lesson) => {
+    weeklySchedule?.teacherDays.forEach((lesson) => {
       const accessStudent =
         role === STUDENT ? lesson.bookedWeekly.length > 0 : false;
       const isBooked = lesson.centerId === currentUserId || accessStudent;
       schedule[lesson.day].push({
         id: lesson.id,
         time: lesson.time,
-        studyMaterial: lesson.studyMaterial,
         isBooked,
 
         teacher: lesson.teacher
@@ -90,7 +85,7 @@ export class WeeklyScheduleService {
     });
 
     return sendResponsive(
-      { weeklyScheduleId: weeklySchedule?.id, ...schedule },
+      { weeklyScheduleId: weeklySchedule?.id, schedule },
       'Weekly schedule successfully',
     );
   }
@@ -148,7 +143,7 @@ export class WeeklyScheduleService {
           centerId: weekly.centerId,
           day: item.day,
           time: item.time,
-          studyMaterial: item.studyMaterial,
+          // studyMaterial: item.studyMaterial,
           weeklyScheduleId: weekly.id,
         })),
       });

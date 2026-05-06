@@ -3,6 +3,7 @@ import {
   BadRequestException,
   UnauthorizedException,
   ForbiddenException,
+  NotFoundException,
 } from '@nestjs/common';
 import { roleTeacherAndCenterSet, sendResponsive, STUDENT } from 'src/utils';
 import SignUpAuthDto from './dto/sign-up-auth.dto';
@@ -13,6 +14,7 @@ import AppConfig from '../config/app.config';
 import { JwtService } from '@nestjs/jwt';
 import { compare, hash } from 'bcrypt';
 import { Response } from 'express';
+import { ChangePasswordDto } from 'src/validators/changePassword.dto';
 
 const secureCookieOptions = (type = 'accessToken') => {
   if (process.env.NODE_ENV === 'development') return {};
@@ -98,7 +100,7 @@ export class AuthService {
     const { email, password } = signInAuthDto;
 
     const user = await this.prisma.user.findUnique({
-      where: { email },
+      where: { email: email.toLocaleLowerCase() },
       select: {
         id: true,
         name: true,
@@ -179,6 +181,35 @@ export class AuthService {
     return sendResponsive(null, 'Logged out successfully');
   }
 
+  async changePassword(userId: string, changePasswordDto: ChangePasswordDto) {
+    const { oldPassword, newPassword } = changePasswordDto;
+    if (oldPassword === newPassword)
+      throw new BadRequestException('Invalid credentials');
+
+    const user = await this.prisma.user.findUnique({
+      where: { id: userId },
+    });
+
+    if (!user) throw new NotFoundException('Invalid credentials');
+
+    const isMatch = await compare(oldPassword, user.password);
+
+    if (!isMatch) {
+      throw new BadRequestException('Invalid credentials');
+    }
+
+    const hashedPassword = await hash(newPassword, 12);
+
+    await this.prisma.user.update({
+      where: { id: userId },
+      data: {
+        password: hashedPassword,
+      },
+    });
+
+    return sendResponsive(null, 'Password updated successfully');
+  }
+
   async refreshToken(oldToken: string, res: Response) {
     let payload: PayloadTokenType;
 
@@ -218,8 +249,6 @@ export class AuthService {
       omit: { userId: true },
     };
     include[role] = includeAndOmit;
-    if (roleTeacherAndCenterSet.has(role))
-      include[`profile_${role}`] = includeAndOmit;
 
     const omit =
       role === STUDENT
@@ -231,7 +260,7 @@ export class AuthService {
     const user = await this.prisma.user.findUnique({
       where: { id: userId },
       include,
-      omit: { updatedAt: true, email: true, password: true, ...omit },
+      omit: { updatedAt: true, password: true, ...omit },
     });
 
     if (!user) throw new BadRequestException('User not found');

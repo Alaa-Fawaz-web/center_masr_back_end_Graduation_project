@@ -75,6 +75,8 @@ export class ExamService {
       where: { courseId, ...whereExam },
       select: {
         id: true,
+        timeEnd: true,
+        duration: true,
         lessonId: true,
         teacherId: true,
         lesson: {
@@ -94,14 +96,17 @@ export class ExamService {
     if (exams.length === 0) throw new NotFoundException('Exams not found');
     return sendResponsive(
       exams.map((exam) => {
-        let isBooked =
-          exam.teacherId === currentUserId ||
-          exam.lesson.bookingLesson.length > 0;
+        const {
+          lesson: { bookingLesson },
+          lessonId,
+          teacherId,
+          ...data
+        } = exam;
+
+        let isBooked = teacherId === currentUserId || bookingLesson.length > 0;
 
         return {
-          id: exam.id,
-          lessonId: exam.lessonId,
-          title: exam.lesson.title,
+          ...data,
           isBooked: isBooked,
         };
       }),
@@ -112,7 +117,6 @@ export class ExamService {
   async create(
     teacherId: string,
     lessonId: string,
-    courseId: string,
     createExamDto: CreateExamDto,
   ) {
     return this.prisma.$transaction(async (prisma) => {
@@ -123,10 +127,10 @@ export class ExamService {
             teacherId,
           },
         },
-        select: { id: true },
+        select: { id: true, courseId: true },
       });
 
-      if (!lesson?.id)
+      if (!lesson)
         throw new NotFoundException('Lesson Not Found or Not authorized');
 
       const exam = await prisma.exam.create({
@@ -134,7 +138,7 @@ export class ExamService {
           ...createExamDto,
           lessonId,
           teacherId,
-          courseId,
+          courseId: lesson.courseId,
         },
         select: {
           id: true,
@@ -152,7 +156,7 @@ export class ExamService {
       prisma.course.update({
         where: {
           id_teacherId: {
-            id: courseId,
+            id: lesson.courseId,
             teacherId,
           },
         },

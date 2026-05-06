@@ -8,7 +8,7 @@ import {
 const studyMaterialArray: string[] = [
   'العلوم',
   'الفيزياء',
-  'الأحياء',
+  'الاحياء',
   'الجبر',
   'الاستاتيكا',
   'التاريخ',
@@ -17,15 +17,17 @@ const studyMaterialArray: string[] = [
   'الكيمياء',
   'الجغرافيا',
   'الرياضيات',
+  'اللغة الاجنبية الثانية',
   'الهندسة الفراغية',
   'الدراسات الاجتماعية',
   'اللغة العربية',
-  'اللغة الإنجليزية',
+  'اللغة الانجليزية',
   'الفلسفة والمنطق',
   'التربية الدينية',
   'التربية البدنية',
   'علوم الحاسوب/تكنولوجيا المعلومات',
   'تكنولوجيا المعلومات والاتصالات',
+  'علم النفس',
 ];
 
 const classRoomArray: string[] = [
@@ -35,9 +37,9 @@ const classRoomArray: string[] = [
   'الصف الرابع الابتدائي',
   'الصف الخامس الابتدائي',
   'الصف السادس الابتدائي',
-  'الصف الأولى الإعدادية',
-  'الصف الثانية الإعدادية',
-  'الصف الثالثة الإعدادية',
+  'الصف الأولى الإعدادي',
+  'الصف الثاني الإعدادي',
+  'الصف الثالث الإعدادي',
   'الصف الأول الثانوي',
   'الصف الثاني الثانوي',
   'الصف الثالث الثانوي',
@@ -62,9 +64,9 @@ const roleTeacherAndCenter: string[] = [TEACHER, CENTER];
 const roleTeacherAndCenterSet: Set<string> = new Set(roleTeacherAndCenter);
 
 const educationalStageArray: string[] = [
-  'المرحلة الابتدائية',
+  'المرحلة الأبتدائية',
+  'المرحلة الأعدادية',
   'المرحلة الثانوية',
-  'الجامعة',
 ];
 const roleArray: string[] = [STUDENT, TEACHER, CENTER, ADMIN];
 
@@ -73,7 +75,7 @@ const classRoomSet = new Set(classRoomArray);
 const studyMaterialSet = new Set(studyMaterialArray);
 const educationalStageSet = new Set(educationalStageArray);
 const daySet = new Set(weekDays);
-const studySystemSet = new Set(['arabic', 'english']);
+const studySystemSet = new Set(['عربي', 'انجليزي']);
 
 const [BadRequest, Unauthorized, Forbidden, NotFound] = [
   'BadRequest',

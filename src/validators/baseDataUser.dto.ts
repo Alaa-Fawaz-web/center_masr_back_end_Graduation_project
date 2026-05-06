@@ -10,10 +10,6 @@ import {
 import EmailAndPassDto from './emailAndpassDto.dto';
 
 export default class BaseDataUserDto extends EmailAndPassDto {
-  @IsOptional()
-  @IsPhoneNumber('EG', { message: 'invalid Egyptian phone number' })
-  whatsApp?: string;
-
   @IsString()
   @MinLength(3)
   @MaxLength(100)

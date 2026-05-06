@@ -1,7 +1,14 @@
-import { IsEmail, IsStrongPassword, Matches } from 'class-validator';
+import { Transform } from 'class-transformer';
+import {
+  IsEmail,
+  IsLowercase,
+  IsStrongPassword,
+  Matches,
+} from 'class-validator';
 
 export default class EmailAndPassDto {
   @IsEmail()
+  @Transform(({ value }) => value?.toLocaleLowerCase())
   email!: string;
 
   @IsStrongPassword({

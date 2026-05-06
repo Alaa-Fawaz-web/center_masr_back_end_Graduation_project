@@ -1,19 +1,31 @@
-import { IsArray, IsInt, IsString, Max, Min } from 'class-validator';
+import {
+  IsArray,
+  IsInt,
+  IsPhoneNumber,
+  IsString,
+  Max,
+  Min,
+} from 'class-validator';
 import { IsInSet, Trim } from './is-in-set.validator';
 import {
   classRoomSet,
+  educationalStageSet,
   studyMaterialSet,
   studySystemSet,
 } from 'src/utils/constant';
 
 export class TeacherDto {
   @Trim()
+  @IsPhoneNumber('EG', { message: 'invalid Egyptian phone number' })
+  whatsApp?: string;
+
+  @Trim()
   @IsString()
   bio?: string;
 
   @IsArray()
   @IsInSet(studySystemSet, { each: true })
-  studySystem?: ('arabic' | 'english')[];
+  studySystem?: ('عربي' | 'انجليزي')[];
 
   @IsArray()
   @IsInSet(classRoomSet, { each: true })
@@ -23,12 +35,16 @@ export class TeacherDto {
   @IsInSet(studyMaterialSet)
   studyMaterial?: string;
 
+  @Trim()
+  @IsInSet(educationalStageSet)
+  educationalStage?: string;
+
   @IsString()
   educationalQualification?: string;
 
   @IsInt()
   @Min(0)
-  @Max(100)
+  @Max(35)
   experienceYear?: number;
 
   @IsInt()

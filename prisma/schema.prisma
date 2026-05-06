@@ -114,15 +114,16 @@ model Teacher {
 
   classRoom                String[]
   studyMaterial            String?
-  studySystem              String[]
+  studySystem              String[] @default(["عربي"])
   educationalStage         String?
   star                     Float    @default(0)
-  whatsApp                 String?
+  whatsPhone               String?
   sharePrice               Int      @default(0)
   centersWhereHeStudie     String[]
   educationalQualification String?
 
   bio            String?
+  studentCounts  Int     @default(0)
   experienceYear Int     @default(0)
   courseCounts   Int     @default(0)
   lessonCounts   Int     @default(0)
@@ -162,19 +163,22 @@ model Center {
   user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   bio              String?
+  location         String?
   governorate      String?
   address          String?
   educationalStage String[]
-  studySystem      String[]
-  classRoom        String[]
+  studySystem      String[] @default(["عربي"])
+  // classRoom        String[]
   star             Float    @default(0)
-  whatsApp         String?
+  studentCounts    Int      @default(0)
+  whatsPhone       String?
   contactUsPhone   String[]
-  contactUsEmail   String[]
+  contactUsEmail   String?
   studyMaterials   String[]
 
-  schedules  WeeklySchedule[]
-  teacherDay TeacherDay[]
+  bookingWeekly BookedWeekly[]
+  schedules     WeeklySchedule[]
+  teacherDay    TeacherDay[]
 }
 
 model RefreshToken {
@@ -233,9 +237,10 @@ model Lesson {
   teacherId String
   teacher   Teacher @relation(fields: [teacherId], references: [id], onDelete: Cascade)
 
-  title       String
-  description String
-  videoUrl    String?
+  title    String
+  duration String
+  // description String
+  videoUrl String?
 
   course   Course @relation(fields: [courseId], references: [id], onDelete: Cascade)
   courseId String
@@ -259,6 +264,8 @@ model BookedLesson {
 
   lesson   Lesson? @relation(fields: [lessonId], references: [id], onDelete: Cascade)
   lessonId String
+
+  createdAt DateTime @default(now())
 
   @@unique([studentId, lessonId])
   @@index([lessonId, studentId])
@@ -309,6 +316,10 @@ model Homework {
 model Exam {
   id String @id @default(uuid())
 
+  timeEnd  DateTime
+  duration DateTime
+  fileUrl  String
+
   teacherId String
   teacher   Teacher @relation(fields: [teacherId], references: [id], onDelete: Cascade)
 
@@ -317,8 +328,6 @@ model Exam {
 
   courseId String
   course   Course @relation(fields: [courseId], references: [id], onDelete: Cascade)
-
-  fileUrl String
 
   createdAt DateTime @default(now())
 
@@ -348,9 +357,9 @@ model TeacherDay {
   weeklyScheduleId String
   weeklySchedule   WeeklySchedule @relation(fields: [weeklyScheduleId], references: [id], onDelete: Cascade)
 
-  time          String
-  day           String
-  studyMaterial String
+  time String
+  day  String
+  // studyMaterial String
 
   bookedWeekly BookedWeekly[]
   center       Center?        @relation(fields: [centerId], references: [id])
@@ -362,10 +371,11 @@ model TeacherDay {
 model BookedWeekly {
   id           String @id @default(uuid())
   studentId    String
+  centerId     String
   teacherDayId String
 
-  student Student @relation(fields: [studentId], references: [id], onDelete: Cascade)
-
+  student    Student    @relation(fields: [studentId], references: [id], onDelete: Cascade)
+  center     Center     @relation(fields: [centerId], references: [id], onDelete: Cascade)
   teacherDay TeacherDay @relation(fields: [teacherDayId], references: [id], onDelete: Cascade)
 
   @@unique([studentId, teacherDayId])

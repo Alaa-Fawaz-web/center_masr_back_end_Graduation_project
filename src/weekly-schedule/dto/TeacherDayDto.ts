@@ -16,7 +16,7 @@ export class TeacherDayDto {
   @IsUUID()
   teacherId!: string;
 
-  @Trim()
-  @IsInSet(studyMaterialSet)
-  studyMaterial!: string;
+  // @Trim()
+  // @IsInSet(studyMaterialSet)
+  // studyMaterial!: string;
 }

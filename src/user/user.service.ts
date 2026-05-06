@@ -13,6 +13,7 @@ import {
 } from 'src/utils';
 import { ProfileDataType, UserDataType } from 'src/types/type';
 import { Role } from '@prisma/client';
+import { UpdateUserDto } from './dto/updateUser.dto';
 
 @Injectable()
 export class UsersService {
@@ -168,9 +169,9 @@ export class UsersService {
             has: filters.educationalStage,
           },
         }),
-        ...(filters.governorate && {
+        ...(filters.location && {
           governorate: {
-            contains: filters.governorate,
+            contains: filters.location,
             mode: 'insensitive',
           },
         }),
@@ -205,6 +206,7 @@ export class UsersService {
                 select: {
                   id: true,
                   educationalStage: true,
+                  location: true,
                   governorate: true,
                   studySystem: true,
                   star: true,
@@ -221,22 +223,19 @@ export class UsersService {
     return sendResponsive(users, 'Get All Users successfully');
   }
 
-  async updateUser(
-    id: string,
-    role: Role,
-    userData: UserDataType,
-    profileData: ProfileDataType,
-  ) {
+  async updateUser(id: string, role: Role, updateUserDto: UpdateUserDto) {
+    console.log('updateUserDto', updateUserDto);
+
     return this.prisma.$transaction(async (prisma) => {
       await prisma.user.update({
         where: { id },
-        data: userData,
+        data: { ...updateUserDto.user },
         select: { id: true },
       });
 
       await prisma[role].update({
         where: { userId: id },
-        data: profileData as any,
+        data: { ...updateUserDto[role] },
         select: { id: true },
       });
 

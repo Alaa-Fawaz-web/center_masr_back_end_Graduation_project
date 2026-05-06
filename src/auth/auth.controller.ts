@@ -6,12 +6,15 @@ import {
   Get,
   Controller,
   ForbiddenException,
+  Patch,
+  BadRequestException,
 } from '@nestjs/common';
 import AuthDecorator from 'src/decorator/auth.decorator';
 import SignUpAuthDto from './dto/sign-up-auth.dto';
 import SignInAuthDto from './dto/sign-in-auth.dto';
 import { AuthService } from './auth.service';
 import type { Response } from 'express';
+import { ChangePasswordDto } from 'src/validators/changePassword.dto';
 
 @Controller('auth')
 export class AuthController {
@@ -32,6 +35,8 @@ export class AuthController {
     @Body() signInAuthDto: SignInAuthDto,
     @Res({ passthrough: true }) res: Response,
   ) {
+    console.log(signInAuthDto);
+
     return this.authService.login(signInAuthDto, res);
   }
 
@@ -39,6 +44,11 @@ export class AuthController {
   async logout(@Req() req, @Res({ passthrough: true }) res: Response) {
     const { userId } = req.user;
     return this.authService.logout(userId, res);
+  }
+
+  @Patch('change-password')
+  changePassword(@Req() req, @Body() changePasswordDto: ChangePasswordDto) {
+    return this.authService.changePassword(req.user.userId, changePasswordDto);
   }
 
   @AuthDecorator()
@@ -51,7 +61,11 @@ export class AuthController {
 
   @Get('me')
   async getMe(@Req() req) {
+    console.log('000');
+
     const { userId, role } = req.user;
+    console.log(userId, role);
+
     return this.authService.getMe(userId, role);
   }
 }

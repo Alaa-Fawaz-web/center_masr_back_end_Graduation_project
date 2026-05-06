@@ -61,7 +61,7 @@ export class LessonService {
       select: {
         id: true,
         title: true,
-        description: true,
+        duration: true,
         teacherId: true,
         createdAt: true,
         bookingLesson: {
@@ -87,7 +87,7 @@ export class LessonService {
           return {
             id: lesson.id,
             title: lesson.title,
-            description: lesson.description,
+            duration: lesson.duration,
             createdAt: lesson.createdAt,
             isBooked: lesson.teacherId === currentUserId || isBooked,
           };

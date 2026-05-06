@@ -97,23 +97,21 @@ export class HomeWorkService {
     if (!homeWorks.length) throw new NotFoundException('Home Works not found');
 
     return sendResponsive(
-      {
-        courseId,
-        data: homeWorks.map((homeWork) => {
-          let isBooked =
-            homeWork.teacherId === currentUserId ||
-            homeWork.lesson.bookingLesson.length > 0;
+      homeWorks.map((homeWork) => {
+        const {
+          lesson: { bookingLesson },
+          lessonId,
+          teacherId,
+          ...data
+        } = homeWork;
 
-          return {
-            id: homeWork.id,
-            lesson: {
-              id: homeWork.lesson.id,
-              title: homeWork.lesson.title,
-            },
-            isBooked,
-          };
-        }),
-      },
+        let isBooked = teacherId === currentUserId || bookingLesson.length > 0;
+
+        return {
+          ...data,
+          isBooked: isBooked,
+        };
+      }),
       'Home work created successfully',
     );
   }
