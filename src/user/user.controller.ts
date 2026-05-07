@@ -13,18 +13,13 @@ import {
 } from '@nestjs/common';
 import { UsersService } from './user.service';
 import { GetAllUsersDto } from './dto/getAllUsersDto';
-import { ProfileService } from 'src/utils/methods_handler';
 import { RoleTeacherAndCenterDto } from 'src/validators/roles.dto';
 import { UpdateUserDto } from './dto/updateUser.dto';
 import AuthDecorator from 'src/decorator/auth.decorator';
 
 @Controller('users')
 export class UsersController {
-  constructor(
-    private usersService: UsersService,
-
-    private ProfileService: ProfileService,
-  ) {}
+  constructor(private usersService: UsersService) {}
 
   @AuthDecorator()
   @Get()
