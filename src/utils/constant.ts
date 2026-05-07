@@ -47,7 +47,7 @@ const classRoomArray: string[] = [
 
 const weekDays: string[] = [
   'السبت',
-  'الأحد',
+  'الاحد',
   'الاثنين',
   'الثلاثاء',
   'الاربعاء',
