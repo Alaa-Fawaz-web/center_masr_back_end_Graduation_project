@@ -37,20 +37,16 @@ async function bootstrap() {
   app.use(morgan('dev'));
 
   app.use(json());
+  const allowedOrigins = [process.env.CLIENT_URL1, process.env.CLIENT_URL2];
+
   app.enableCors({
     origin: (origin, callback) => {
-      const allowedOrigins =
-        process.env.NODE_ENV === 'production'
-          ? [process.env.CLIENT_URL]
-          : ['http://localhost:3000'];
-
       if (!origin || allowedOrigins.includes(origin)) {
         callback(null, true);
       } else {
-        callback(null, false);
+        callback(new Error('Not allowed by CORS'));
       }
     },
-    methods: 'GET,POST,PUT,DELETE,PATCH',
     credentials: true,
   });
 
