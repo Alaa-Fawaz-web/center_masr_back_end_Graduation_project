@@ -20,7 +20,6 @@ export class PostService {
       select: {
         id: true,
         title: true,
-        content: true,
         imageUrl: true,
         likeCounts: true,
         commentCounts: true,
@@ -65,7 +64,6 @@ export class PostService {
       select: {
         id: true,
         title: true,
-        content: true,
         imageUrl: true,
         likeCounts: true,
         commentCounts: true,

@@ -418,7 +418,6 @@ model Post {
 
   role     Role
   title    String
-  content  String
   imageUrl String?
 
   likeCounts    Int @default(0)
