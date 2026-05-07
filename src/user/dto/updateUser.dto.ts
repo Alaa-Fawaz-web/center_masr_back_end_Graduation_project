@@ -15,10 +15,6 @@ class baseTeacherDto extends PartialType(TeacherDto) {}
 class baseCenterDto extends PartialType(CenterDto) {}
 class baseStudentDto extends PartialType(StudentDto) {}
 
-// class updateUserTeacherDto extends PartialType(BaseDataUserDto) {}
-// class updateUserStudentDto extends PartialType(BaseDataUserDto) {}
-// class updateUserCenterDto extends PartialType(BaseDataUserDto) {}
-
 export class UpdateUserDto {
   @ValidateNested()
   @Type(() => BaseUserDto)
@@ -36,18 +32,3 @@ export class UpdateUserDto {
   @Type(() => baseStudentDto)
   student?: baseStudentDto;
 }
-// export class UpdateUserDto {
-//   // base data
-//   user?: BaseUserDto;
-
-//   // role-specific
-//   teacher?: baseTeacherDto;
-//   center?: baseCenterDto;
-//   student?: baseStudentDto;
-// }
-// export class UpdateUserDto extends IntersectionType(
-//   BaseUserDto,
-//   baseTeacherDto,
-//   baseCenterDto,
-//   baseStudentDto,
-// ) {}

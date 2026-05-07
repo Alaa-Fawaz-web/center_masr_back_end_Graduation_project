@@ -24,7 +24,6 @@ export class BookedLessonService {
         },
       });
 
-      // 🔴 لو موجود → احذف
       if (existing) {
         await prisma.bookedLesson.delete({
           where: {
@@ -45,7 +44,6 @@ export class BookedLessonService {
         return sendResponsive(null, 'Lesson unbooked successfully');
       }
 
-      // 🟢 لو مش موجود → اعمل create
       await prisma.bookedLesson.create({
         data: { lessonId, studentId },
       });

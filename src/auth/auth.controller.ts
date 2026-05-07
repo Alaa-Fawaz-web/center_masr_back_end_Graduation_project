@@ -35,8 +35,6 @@ export class AuthController {
     @Body() signInAuthDto: SignInAuthDto,
     @Res({ passthrough: true }) res: Response,
   ) {
-    console.log(signInAuthDto);
-
     return this.authService.login(signInAuthDto, res);
   }
 
@@ -61,11 +59,7 @@ export class AuthController {
 
   @Get('me')
   async getMe(@Req() req) {
-    console.log('000');
-
     const { userId, role } = req.user;
-    console.log(userId, role);
-
     return this.authService.getMe(userId, role);
   }
 }

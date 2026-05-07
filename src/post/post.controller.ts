@@ -31,8 +31,6 @@ export class PostController {
     @Req() req,
   ) {
     const { userId } = req.user as RequestType;
-    console.log(userId);
-
     return this.postService.getAllPosts(getAllPostsDto, userId, page.page);
   }
 

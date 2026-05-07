@@ -19,12 +19,11 @@ import { CourseModule } from './course/course.module';
 import { ReviewModule } from './review/review.module';
 import { BookedLessonModule } from './bookedLesson/booked-lesson.module';
 import { BookedWeeklyModule } from './bookedWeekly/booked.weekly.module';
-import { TeacherCenterModule } from './teacher-center/teacher-center.module';
-import { StudentDashboardModule } from './student-dashboard/student-dashboard.module';
+import { StudentDashboardModule } from './dashboard-student/student-dashboard.module';
 import { HomeController } from './homePage.controller';
 import { ChatModule } from './WS_Chat2/ChatModule';
-import { TeacherDashboardModule } from './teacher-dashboard/teacher-dashboard.module';
-import { CenterDashboardModule } from './center-dashboard/center-dashboard.module';
+import { TeacherDashboardModule } from './dashboard-teacher/teacher-dashboard.module';
+import { CenterDashboardModule } from './dashboard-center/center-dashboard.module';
 
 @Module({
   imports: [
@@ -48,7 +47,6 @@ import { CenterDashboardModule } from './center-dashboard/center-dashboard.modul
     BookedLessonModule,
     BookedWeeklyModule,
     WeeklyScheduleModule,
-    TeacherCenterModule,
     StudentDashboardModule,
     ChatModule,
     TeacherDashboardModule,

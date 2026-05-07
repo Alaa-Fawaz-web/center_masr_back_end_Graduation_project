@@ -37,11 +37,6 @@ async function bootstrap() {
   app.use(morgan('dev'));
 
   app.use(json());
-  // app.enableCors({
-  //   origin: ['https://center-masr.vercel.app'],
-  //   methods: 'GET,POST,PUT,DELETE,PATCH',
-  //   credentials: true,
-  // });
   app.enableCors({
     origin: (origin, callback) => {
       const allowedOrigins =

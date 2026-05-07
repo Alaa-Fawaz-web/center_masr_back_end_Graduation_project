@@ -31,7 +31,6 @@ export class UsersService {
 
     if (!roleTeacherAndCenterSet.has(role))
       throw new BadRequestException('invalid Role, must be teacher or center');
-    console.log(targetUserId, role, currentUserId);
 
     const user = await this.prisma.user.findUnique({
       where: { id: targetUserId },
@@ -218,14 +217,11 @@ export class UsersService {
       skip,
       take: limit,
     });
-    console.log(users);
 
     return sendResponsive(users, 'Get All Users successfully');
   }
 
   async updateUser(id: string, role: Role, updateUserDto: UpdateUserDto) {
-    console.log('updateUserDto', updateUserDto);
-
     return this.prisma.$transaction(async (prisma) => {
       await prisma.user.update({
         where: { id },

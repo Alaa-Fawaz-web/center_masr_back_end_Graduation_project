@@ -7,11 +7,7 @@ export class ChatWsService implements OnModuleInit, OnModuleDestroy {
   private wss: Server;
   private httpServer: any;
 
-  constructor(
-    private messageService: MessageService,
-
-    // private conversationsService: ConversationsService,
-  ) {}
+  constructor(private messageService: MessageService) {}
   private users = new Map<string, Set<WebSocket>>();
   private conversations = new Map<string, Set<string>>();
   private userContacts = new Map<string, Set<string>>();
@@ -23,45 +19,35 @@ export class ChatWsService implements OnModuleInit, OnModuleDestroy {
   onModuleInit() {
     this.wss = new Server({ server: this.httpServer });
 
-    console.log('🚀 WS running');
-
     this.wss.on('connection', async (socket: WebSocket, req: any) => {
       const url = new URL(req.url, 'http://localhost');
       const userId = url.searchParams.get('userId');
 
       if (!userId) return socket.close();
 
-      console.log('🔥 CONNECT:', userId);
-      console.log(this.conversations);
       this.addUser(userId, socket);
       this.handleConnection(userId);
 
-      // ✅ مهم
       this.broadcastPresence(userId, true);
 
       socket.on('message', (data) => {
-        console.log('message', data);
         this.handleMessage(userId, data);
       });
 
       socket.on('close', () => {
-        console.log('❌ DISCONNECT:', userId);
         this.removeUser(userId, socket);
         this.handleDisconnect(userId);
-        // ✅ مهم
         this.broadcastPresence(userId, false);
       });
     });
   }
 
   onModuleDestroy() {
-    console.log('onModuleDestroy');
     this.wss?.close();
   }
 
   // ================= USERS =================
   addUser(userId: string, socket: WebSocket) {
-    console.log('addUser', userId);
     if (!this.users.has(userId)) {
       this.users.set(userId, new Set());
     }
@@ -69,7 +55,6 @@ export class ChatWsService implements OnModuleInit, OnModuleDestroy {
   }
 
   removeUser(userId: string, socket: WebSocket) {
-    console.log('removeUser', userId);
     const sockets = this.users.get(userId);
     if (!sockets) return;
 
@@ -81,7 +66,6 @@ export class ChatWsService implements OnModuleInit, OnModuleDestroy {
 
   // ================= CONTACTS =================
   setUserContacts(userId: string, contacts: string[]) {
-    console.log('setUserContacts', userId, contacts);
     this.userContacts.set(userId, new Set(contacts));
 
     this.sendToUser(userId, {
@@ -96,8 +80,6 @@ export class ChatWsService implements OnModuleInit, OnModuleDestroy {
   }
 
   initConversations(userId: string, conversations: any[]) {
-    console.log('initConversations', userId);
-
     if (!Array.isArray(conversations)) return;
 
     conversations.forEach(({ receiverId }) => {
@@ -123,7 +105,6 @@ export class ChatWsService implements OnModuleInit, OnModuleDestroy {
   }
   // ================= PRESENCE =================
   broadcastPresence(userId: string, isOnline: boolean) {
-    console.log('broadcastPresence', userId);
     const contacts = this.userContacts.get(userId);
     if (!contacts) return;
 
@@ -137,20 +118,15 @@ export class ChatWsService implements OnModuleInit, OnModuleDestroy {
     });
   }
 
-  handleConnection(userId: string) {
-    console.log('handleConnection', userId);
-  }
+  handleConnection(userId: string) {}
 
   handleDisconnect(userId: string) {
-    console.log('handleDisconnect', userId);
     this.broadcastPresence(userId, false);
   }
 
   // ================= CONVERSATION =================
 
   joinConversation(userId: string, receiverId: string, conversationId: string) {
-    console.log('joinConversation', userId);
-
     if (!this.conversations.has(conversationId)) {
       this.conversations.set(conversationId, new Set());
     }
@@ -166,15 +142,12 @@ export class ChatWsService implements OnModuleInit, OnModuleDestroy {
     });
   }
 
-  // isInConversation(userId: string, otherUserId: string) {
   isInConversation(userId: string, conversationId: string) {
-    console.log('isInConversation', userId, conversationId);
     return this.conversations.get(conversationId)?.has(userId);
   }
 
   async handleChat(userId: string, payload: any) {
     const { receiverId, conversationId, content } = payload;
-    console.log('01212121212', payload);
 
     if (userId === receiverId) {
       return this.sendToUser(userId, {
@@ -197,13 +170,6 @@ export class ChatWsService implements OnModuleInit, OnModuleDestroy {
         conversationId,
         content,
       );
-
-      // await this.conversations.createMessage(
-      //   userId,
-      //   receiverId,
-      //   conversationId,
-      //   content,
-      // );
 
       [userId, receiverId].forEach((uid) => {
         this.sendToUser(uid, {
@@ -241,7 +207,6 @@ export class ChatWsService implements OnModuleInit, OnModuleDestroy {
     } catch {
       return;
     }
-    console.log('init_conversations', msg.payload);
 
     switch (msg.type) {
       case 'check_user_status':
@@ -256,11 +221,9 @@ export class ChatWsService implements OnModuleInit, OnModuleDestroy {
         });
         break;
       case 'init_conversations':
-        console.log('init_conversations', msg.payload);
         this.initConversations(userId, msg.payload);
         break;
       case 'join':
-        console.log('join', msg.payload);
         this.joinConversation(
           userId,
           msg.payload.receiverId,
@@ -269,7 +232,6 @@ export class ChatWsService implements OnModuleInit, OnModuleDestroy {
         break;
 
       case 'open_chat':
-        console.log('open_chat', msg);
         this.sendToUser(userId, {
           type: 'presence',
           payload: {
@@ -279,13 +241,11 @@ export class ChatWsService implements OnModuleInit, OnModuleDestroy {
           },
         });
         break;
-      case 'typing': // ✅ جديد
+      case 'typing':
         this.handleTyping(userId, msg.payload);
         break;
 
       case 'send_message':
-        console.log('send_message', msg.payload);
-
         this.handleChat(userId, msg.payload);
         break;
     }
@@ -309,7 +269,6 @@ export class ChatWsService implements OnModuleInit, OnModuleDestroy {
   }
   // ================= SEND =================
   sendToUser(userId: string, data: any) {
-    console.log('sendToUser', userId, data);
     const sockets = this.users.get(userId);
     if (!sockets) return;
 

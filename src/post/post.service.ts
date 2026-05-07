@@ -77,13 +77,6 @@ export class PostService {
           },
           take: 1,
         },
-        // user: {
-        //   select: {
-        //     id: true,
-        //     name: true,
-        //     imageUrl: true,
-        //   },
-        // },
       },
     });
 

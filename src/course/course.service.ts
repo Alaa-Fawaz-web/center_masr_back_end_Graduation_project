@@ -46,7 +46,9 @@ export class CourseService {
       select: {
         id: true,
         time: true,
+        day: true,
         title: true,
+        teacherId: true,
         classRoom: true,
         studyMaterial: true,
         lessonCounts: true,

@@ -143,7 +143,6 @@ export class WeeklyScheduleService {
           centerId: weekly.centerId,
           day: item.day,
           time: item.time,
-          // studyMaterial: item.studyMaterial,
           weeklyScheduleId: weekly.id,
         })),
       });

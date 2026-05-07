@@ -12,8 +12,6 @@ export class MessageService {
     conversationId: string,
     content: string,
   ) {
-    console.log(conversationId);
-
     return await this.prisma.$transaction(async (prisma) => {
       const message = await prisma.message.create({
         data: {
@@ -33,7 +31,6 @@ export class MessageService {
           lastMessageAt: new Date(),
         },
       });
-      console.log(conversation, 'conversations');
 
       return message;
     });

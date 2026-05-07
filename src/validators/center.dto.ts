@@ -38,19 +38,13 @@ export class CenterDto {
   @IsInSet(studySystemSet, { each: true })
   studySystem?: ('عربي' | 'انجليزي')[];
 
-  // @IsArray()
-  // @IsInSet(classRoomSet, { each: true })
-  // classRoom?: string[];
-
   @IsArray()
   @UniqueArray()
   @IsInSet(studyMaterialSet, { each: true })
   studyMaterials?: string[];
 
-  // { message: 'invalid Egyptian phone number' },
   @IsArray()
   @IsPhoneNumber('EG', { each: true, message: 'invalid Egyptian phone number' })
-  // @Matches(/^01[0-9]{9}$/, { each: true })
   contactUsPhone?: string[];
 
   @IsArray()

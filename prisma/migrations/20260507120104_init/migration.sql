@@ -10,7 +10,6 @@ CREATE TABLE "User" (
     "password" TEXT NOT NULL,
     "role" "Role" NOT NULL,
     "phone" TEXT,
-    "address" TEXT,
     "followerCounts" INTEGER NOT NULL DEFAULT 0,
     "followingCounts" INTEGER NOT NULL DEFAULT 0,
     "postCounts" INTEGER NOT NULL DEFAULT 0,
@@ -25,9 +24,9 @@ CREATE TABLE "Conversation" (
     "id" TEXT NOT NULL,
     "userAId" TEXT NOT NULL,
     "userBId" TEXT NOT NULL,
-    "lastMessage" TEXT NOT NULL,
+    "lastMessage" TEXT NOT NULL DEFAULT '',
     "lastMessageAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "createdAt" TIMESTAMP(3),
 
     CONSTRAINT "Conversation_pkey" PRIMARY KEY ("id")
 );
@@ -60,12 +59,16 @@ CREATE TABLE "Notifications" (
 CREATE TABLE "Teacher" (
     "id" TEXT NOT NULL,
     "userId" TEXT NOT NULL,
-    "classRoom" TEXT,
+    "classRoom" TEXT[],
     "studyMaterial" TEXT,
-    "studySystem" TEXT[],
-    "educationalStage" TEXT[],
-    "star" DOUBLE PRECISION NOT NULL DEFAULT 0,
+    "studySystem" TEXT[] DEFAULT ARRAY['عربي']::TEXT[],
+    "educationalStage" TEXT,
+    "star" INTEGER NOT NULL DEFAULT 0,
+    "whatsPhone" TEXT,
+    "sharePrice" INTEGER NOT NULL DEFAULT 0,
+    "educationalQualification" TEXT,
     "bio" TEXT,
+    "studentCounts" INTEGER NOT NULL DEFAULT 0,
     "experienceYear" INTEGER NOT NULL DEFAULT 0,
     "courseCounts" INTEGER NOT NULL DEFAULT 0,
     "lessonCounts" INTEGER NOT NULL DEFAULT 0,
@@ -87,40 +90,50 @@ CREATE TABLE "Student" (
 );
 
 -- CreateTable
-CREATE TABLE "ProfileTeacher" (
-    "id" TEXT NOT NULL,
-    "userId" TEXT NOT NULL,
-    "whatsApp" TEXT,
-    "sharePrice" INTEGER NOT NULL DEFAULT 0,
-    "centersWhereHeStudie" TEXT[],
-    "educationalQualification" TEXT,
-
-    CONSTRAINT "ProfileTeacher_pkey" PRIMARY KEY ("id")
-);
-
--- CreateTable
 CREATE TABLE "Center" (
     "id" TEXT NOT NULL,
     "userId" TEXT NOT NULL,
     "bio" TEXT,
+    "location" TEXT,
     "governorate" TEXT,
+    "address" TEXT,
     "educationalStage" TEXT[],
-    "studySystem" TEXT[],
-    "star" DOUBLE PRECISION NOT NULL DEFAULT 0,
+    "studySystem" TEXT[] DEFAULT ARRAY['عربي']::TEXT[],
+    "star" INTEGER NOT NULL DEFAULT 0,
+    "studentCounts" INTEGER NOT NULL DEFAULT 0,
+    "whatsPhone" TEXT,
+    "contactUsPhone" TEXT[],
+    "contactUsEmail" TEXT,
+    "studyMaterials" TEXT[],
 
     CONSTRAINT "Center_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
-CREATE TABLE "ProfileCenter" (
+CREATE TABLE "TeacherByCenter" (
     "id" TEXT NOT NULL,
-    "userId" TEXT NOT NULL,
-    "whatsApp" TEXT,
-    "contactUsPhone" TEXT[],
-    "contactUsEmail" TEXT[],
-    "studyMaterials" TEXT[],
+    "centerId" TEXT NOT NULL,
+    "name" TEXT NOT NULL,
+    "imageUrl" TEXT,
+    "phone" TEXT NOT NULL,
+    "classRoom" TEXT[],
+    "studyMaterial" TEXT NOT NULL,
+    "studySystem" TEXT[] DEFAULT ARRAY['عربي']::TEXT[],
+    "educationalStage" TEXT NOT NULL,
+    "star" INTEGER NOT NULL DEFAULT 0,
+    "whatsPhone" TEXT,
+    "sharePrice" INTEGER NOT NULL DEFAULT 0,
+    "educationalQualification" TEXT,
+    "bio" TEXT,
+    "studentCounts" INTEGER NOT NULL DEFAULT 0,
+    "experienceYear" INTEGER NOT NULL DEFAULT 0,
+    "courseCounts" INTEGER NOT NULL DEFAULT 0,
+    "lessonCounts" INTEGER NOT NULL DEFAULT 0,
+    "noteCounts" INTEGER NOT NULL DEFAULT 0,
+    "homeworkCounts" INTEGER NOT NULL DEFAULT 0,
+    "examCounts" INTEGER NOT NULL DEFAULT 0,
 
-    CONSTRAINT "ProfileCenter_pkey" PRIMARY KEY ("id")
+    CONSTRAINT "TeacherByCenter_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
@@ -165,7 +178,7 @@ CREATE TABLE "Lesson" (
     "id" TEXT NOT NULL,
     "teacherId" TEXT NOT NULL,
     "title" TEXT NOT NULL,
-    "description" TEXT NOT NULL,
+    "duration" TEXT NOT NULL,
     "videoUrl" TEXT,
     "courseId" TEXT NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -178,6 +191,7 @@ CREATE TABLE "BookedLesson" (
     "id" TEXT NOT NULL,
     "studentId" TEXT NOT NULL,
     "lessonId" TEXT NOT NULL,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
     CONSTRAINT "BookedLesson_pkey" PRIMARY KEY ("id")
 );
@@ -209,10 +223,12 @@ CREATE TABLE "Homework" (
 -- CreateTable
 CREATE TABLE "Exam" (
     "id" TEXT NOT NULL,
+    "timeEnd" TIMESTAMP(3) NOT NULL,
+    "duration" TIMESTAMP(3) NOT NULL,
+    "fileUrl" TEXT NOT NULL,
     "teacherId" TEXT NOT NULL,
     "lessonId" TEXT NOT NULL,
     "courseId" TEXT NOT NULL,
-    "fileUrl" TEXT NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
     CONSTRAINT "Exam_pkey" PRIMARY KEY ("id")
@@ -234,7 +250,6 @@ CREATE TABLE "TeacherDay" (
     "weeklyScheduleId" TEXT NOT NULL,
     "time" TEXT NOT NULL,
     "day" TEXT NOT NULL,
-    "studyMaterial" TEXT NOT NULL,
     "centerId" TEXT,
 
     CONSTRAINT "TeacherDay_pkey" PRIMARY KEY ("id")
@@ -244,6 +259,7 @@ CREATE TABLE "TeacherDay" (
 CREATE TABLE "BookedWeekly" (
     "id" TEXT NOT NULL,
     "studentId" TEXT NOT NULL,
+    "centerId" TEXT NOT NULL,
     "teacherDayId" TEXT NOT NULL,
 
     CONSTRAINT "BookedWeekly_pkey" PRIMARY KEY ("id")
@@ -312,13 +328,10 @@ CREATE UNIQUE INDEX "Student_userId_key" ON "Student"("userId");
 CREATE INDEX "Student_classRoom_educationalStage_idx" ON "Student"("classRoom", "educationalStage");
 
 -- CreateIndex
-CREATE UNIQUE INDEX "ProfileTeacher_userId_key" ON "ProfileTeacher"("userId");
-
--- CreateIndex
 CREATE UNIQUE INDEX "Center_userId_key" ON "Center"("userId");
 
 -- CreateIndex
-CREATE UNIQUE INDEX "ProfileCenter_userId_key" ON "ProfileCenter"("userId");
+CREATE UNIQUE INDEX "TeacherByCenter_centerId_key" ON "TeacherByCenter"("centerId");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "RefreshToken_userId_key" ON "RefreshToken"("userId");
@@ -438,13 +451,10 @@ ALTER TABLE "Teacher" ADD CONSTRAINT "Teacher_userId_fkey" FOREIGN KEY ("userId"
 ALTER TABLE "Student" ADD CONSTRAINT "Student_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "ProfileTeacher" ADD CONSTRAINT "ProfileTeacher_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE CASCADE ON UPDATE CASCADE;
-
--- AddForeignKey
 ALTER TABLE "Center" ADD CONSTRAINT "Center_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "ProfileCenter" ADD CONSTRAINT "ProfileCenter_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "TeacherByCenter" ADD CONSTRAINT "TeacherByCenter_centerId_fkey" FOREIGN KEY ("centerId") REFERENCES "Center"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "RefreshToken" ADD CONSTRAINT "RefreshToken_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE CASCADE ON UPDATE CASCADE;
@@ -511,6 +521,9 @@ ALTER TABLE "TeacherDay" ADD CONSTRAINT "TeacherDay_centerId_fkey" FOREIGN KEY (
 
 -- AddForeignKey
 ALTER TABLE "BookedWeekly" ADD CONSTRAINT "BookedWeekly_studentId_fkey" FOREIGN KEY ("studentId") REFERENCES "Student"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "BookedWeekly" ADD CONSTRAINT "BookedWeekly_centerId_fkey" FOREIGN KEY ("centerId") REFERENCES "Center"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "BookedWeekly" ADD CONSTRAINT "BookedWeekly_teacherDayId_fkey" FOREIGN KEY ("teacherDayId") REFERENCES "TeacherDay"("id") ON DELETE CASCADE ON UPDATE CASCADE;

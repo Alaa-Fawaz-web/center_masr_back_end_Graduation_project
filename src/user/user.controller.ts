@@ -54,50 +54,12 @@ export class UsersController {
     @Body() updateUserDto: UpdateUserDto,
     @Req() req,
   ) {
-    // console.log(req);
-    // console.log(req.body);
-
     const { role } = req.user;
     if (req.user.userId !== userId)
       throw new BadRequestException('something wrong');
 
     return this.usersService.updateUser(userId, role!, updateUserDto);
   }
-
-  // @Patch('center/:userId')
-  // updateUserCenter(
-  //   @Param('userId', ParseUUIDPipe) userId: string,
-  //   @Body() updateUserDto: UpdateUserDto,
-  //   @Req() req,
-  // ) {
-  //   if (req.user.role !== updateUserDto.role)
-  //     throw new BadRequestException('You can not change your role');
-  //   if (req.user.userId !== userId) throw new BadRequestException('');
-
-  //   return this.usersService.updateUser(
-  //     req.user.userId,
-  //     updateUserDto.role!,
-  //     userData,
-  //     profileData,
-  //   );
-  // }
-  // @Patch('student/:userId')
-  // updateUserStudent(
-  //   @Param('userId', ParseUUIDPipe) userId: string,
-  //   @Body() updateUserDto: UpdateUserDto,
-  //   @Req() req,
-  // ) {
-  //   if (req.user.role !== updateUserDto.role)
-  //     throw new BadRequestException('You can not change your role');
-  //   if (req.user.userId !== userId) throw new BadRequestException('');
-
-  //   return this.usersService.updateUser(
-  //     req.user.userId,
-  //     updateUserDto.role!,
-  //     userData,
-  //     profileData,
-  //   );
-  // }
 
   @Delete(':userId')
   deleteUser(@Param('userId', ParseUUIDPipe) userId: string, @Req() req) {

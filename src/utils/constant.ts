@@ -54,6 +54,7 @@ const weekDays: string[] = [
   'الخميس',
   'الجمعة',
 ];
+const weekDaysSet = new Set(weekDays);
 
 const Roles = ['admin', 'teacher', 'student', 'center'];
 
@@ -112,6 +113,7 @@ export {
   Forbidden,
   NotFound,
   classRoomArray,
+  weekDaysSet,
   studyMaterialArray,
   educationalStageArray,
   roleTeacherAndCenterSet,

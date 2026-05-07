@@ -116,10 +116,9 @@ model Teacher {
   studyMaterial            String?
   studySystem              String[] @default(["عربي"])
   educationalStage         String?
-  star                     Float    @default(0)
+  star                     Int      @default(0)
   whatsPhone               String?
   sharePrice               Int      @default(0)
-  centersWhereHeStudie     String[]
   educationalQualification String?
 
   bio            String?
@@ -169,16 +168,45 @@ model Center {
   educationalStage String[]
   studySystem      String[] @default(["عربي"])
   // classRoom        String[]
-  star             Float    @default(0)
+  star             Int      @default(0)
   studentCounts    Int      @default(0)
   whatsPhone       String?
   contactUsPhone   String[]
   contactUsEmail   String?
   studyMaterials   String[]
 
-  bookingWeekly BookedWeekly[]
-  schedules     WeeklySchedule[]
-  teacherDay    TeacherDay[]
+  teacherByCenter TeacherByCenter[]
+  bookingWeekly   BookedWeekly[]
+  schedules       WeeklySchedule[]
+  teacherDay      TeacherDay[]
+}
+
+model TeacherByCenter {
+  id String @id @default(uuid())
+
+  centerId String  @unique
+  center   Center  @relation(fields: [centerId], references: [id], onDelete: Cascade)
+  name     String
+  imageUrl String?
+  phone    String?
+
+  classRoom                String[]
+  studyMaterial            String?
+  studySystem              String[] @default(["عربي"])
+  educationalStage         String?
+  star                     Int      @default(0)
+  whatsPhone               String?
+  sharePrice               Int      @default(0)
+  educationalQualification String?
+
+  bio            String?
+  studentCounts  Int     @default(0)
+  experienceYear Int     @default(0)
+  courseCounts   Int     @default(0)
+  lessonCounts   Int     @default(0)
+  noteCounts     Int     @default(0)
+  homeworkCounts Int     @default(0)
+  examCounts     Int     @default(0)
 }
 
 model RefreshToken {
@@ -210,6 +238,7 @@ model Course {
   teacher   Teacher @relation(fields: [teacherId], references: [id], onDelete: Cascade)
 
   time           DateTime
+  day            String
   title          String
   studyMaterial  String
   classRoom      String
