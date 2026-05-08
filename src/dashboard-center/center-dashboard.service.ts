@@ -27,6 +27,7 @@ export class CenterDashboardService {
     const teachers = await this.prisma.teacherByCenter.findMany({
       where: { centerId },
       select: {
+        id: true,
         name: true,
         imageUrl: true,
         classRoom: true,
