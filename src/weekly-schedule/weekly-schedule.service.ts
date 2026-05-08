@@ -76,6 +76,7 @@ export class WeeklyScheduleService {
           ? {
               id: lesson.teacherByCenter.id,
               name: lesson.teacherByCenter.name,
+              classRoom: lesson.teacherByCenter.classRoom,
               imageUrl: lesson.teacherByCenter.imageUrl,
             }
           : null,
