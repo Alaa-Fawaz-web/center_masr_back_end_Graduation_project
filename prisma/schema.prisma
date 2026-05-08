@@ -116,7 +116,7 @@ model Teacher {
   studyMaterial            String?
   studySystem              String[] @default(["عربي"])
   educationalStage         String?
-  star                     Int      @default(0)
+  star                     Float    @default(0)
   whatsPhone               String?
   sharePrice               Int      @default(0)
   educationalQualification String?
@@ -167,7 +167,7 @@ model Center {
   educationalStage String[]
   studySystem      String[] @default(["عربي"])
   // classRoom        String[]
-  star             Int      @default(0)
+  star             Float    @default(0)
   studentCounts    Int      @default(0)
   whatsPhone       String?
   contactUsPhone   String[]
@@ -193,7 +193,7 @@ model TeacherByCenter {
   studyMaterial            String?
   studySystem              String[] @default(["عربي"])
   educationalStage         String?
-  star                     Int      @default(0)
+  star                     Float    @default(0)
   whatsPhone               String?
   sharePrice               Int      @default(0)
   educationalQualification String?
