@@ -14,5 +14,5 @@ export class TeacherDayDto {
   time!: string;
 
   @IsUUID()
-  teacherId!: string;
+  teacherByCenterId!: string;
 }

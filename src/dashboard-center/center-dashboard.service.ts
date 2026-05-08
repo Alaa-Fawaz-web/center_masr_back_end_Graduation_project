@@ -65,13 +65,9 @@ export class CenterDashboardService {
           },
           teacherDay: {
             select: {
-              teacher: {
+              teacherByCenter: {
                 select: {
-                  user: {
-                    select: {
-                      name: true,
-                    },
-                  },
+                  name: true,
                 },
               },
             },

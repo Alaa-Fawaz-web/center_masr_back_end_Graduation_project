@@ -60,14 +60,10 @@ export class StudentDashboardService {
                 },
               },
             },
-            teacher: {
+            teacherByCenter: {
               select: {
                 id: true,
-                user: {
-                  select: {
-                    name: true,
-                  },
-                },
+                name: true,
               },
             },
           },

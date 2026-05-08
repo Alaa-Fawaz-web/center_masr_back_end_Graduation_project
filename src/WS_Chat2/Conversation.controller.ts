@@ -10,6 +10,8 @@ export class ConversationController {
   @AuthDecorator()
   @Post()
   createConversation(@Query() getAllChatIdDto: GetAllChatIdDto) {
+    console.log(getAllChatIdDto);
+
     return this.conversationService.createConversation(
       getAllChatIdDto.senderId,
       getAllChatIdDto.receiverId,

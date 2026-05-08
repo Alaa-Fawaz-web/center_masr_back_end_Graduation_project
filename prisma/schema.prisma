@@ -130,12 +130,11 @@ model Teacher {
   homeworkCounts Int     @default(0)
   examCounts     Int     @default(0)
 
-  course      Course[]
-  lesson      Lesson[]
-  note        Note[]
-  exam        Exam[]
-  homework    Homework[]
-  teacherDays TeacherDay[]
+  course   Course[]
+  lesson   Lesson[]
+  note     Note[]
+  exam     Exam[]
+  homework Homework[]
 
   @@index([classRoom, studyMaterial, studySystem])
 }
@@ -207,6 +206,8 @@ model TeacherByCenter {
   noteCounts     Int     @default(0)
   homeworkCounts Int     @default(0)
   examCounts     Int     @default(0)
+
+  teacherDays TeacherDay[]
 }
 
 model RefreshToken {
@@ -379,9 +380,9 @@ model WeeklySchedule {
 }
 
 model TeacherDay {
-  id        String  @id @default(uuid())
-  teacherId String
-  teacher   Teacher @relation(fields: [teacherId], references: [id], onDelete: Cascade)
+  id                String          @id @default(uuid())
+  teacherByCenterId String
+  teacherByCenter   TeacherByCenter @relation(fields: [teacherByCenterId], references: [id], onDelete: Cascade)
 
   weeklyScheduleId String
   weeklySchedule   WeeklySchedule @relation(fields: [weeklyScheduleId], references: [id], onDelete: Cascade)
@@ -394,7 +395,7 @@ model TeacherDay {
   center       Center?        @relation(fields: [centerId], references: [id])
   centerId     String?
 
-  @@unique([teacherId, weeklyScheduleId, day, time])
+  @@unique([teacherByCenterId, weeklyScheduleId, day, time])
 }
 
 model BookedWeekly {

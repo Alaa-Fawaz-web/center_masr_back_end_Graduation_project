@@ -17,16 +17,24 @@ export class ChatWsService implements OnModuleInit, OnModuleDestroy {
   }
 
   onModuleInit() {
-    this.wss = new Server({ server: this.httpServer, path: '/api/v1/ws' });
+    this.wss = new Server({
+      server: this.httpServer,
+      path: '/api/v1/ws',
+    });
 
     this.wss.on('connection', async (socket: WebSocket, req: any) => {
-      const url = new URL(req.url, 'http://localhost');
+      const url = new URL(req.url!, 'http://localhost');
+
       const userId = url.searchParams.get('userId');
 
-      if (!userId) return socket.close();
+      if (!userId) {
+        socket.close();
+        return;
+      }
+
+      console.log('✅ CONNECTED', userId);
 
       this.addUser(userId, socket);
-      this.handleConnection(userId);
 
       this.broadcastPresence(userId, true);
 
@@ -35,8 +43,10 @@ export class ChatWsService implements OnModuleInit, OnModuleDestroy {
       });
 
       socket.on('close', () => {
+        console.log('❌ DISCONNECTED', userId);
+
         this.removeUser(userId, socket);
-        this.handleDisconnect(userId);
+
         this.broadcastPresence(userId, false);
       });
     });

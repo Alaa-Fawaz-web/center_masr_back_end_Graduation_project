@@ -206,7 +206,6 @@ export class UsersService {
                   id: true,
                   educationalStage: true,
                   location: true,
-                  governorate: true,
                   studySystem: true,
                   star: true,
                   bio: true,

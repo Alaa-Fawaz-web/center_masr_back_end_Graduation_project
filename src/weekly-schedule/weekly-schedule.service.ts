@@ -35,15 +35,11 @@ export class WeeklyScheduleService {
             day: true,
             time: true,
             centerId: true,
-            teacher: {
+            teacherByCenter: {
               select: {
                 id: true,
-                user: {
-                  select: {
-                    name: true,
-                    imageUrl: true,
-                  },
-                },
+                name: true,
+                imageUrl: true,
               },
             },
             bookedWeekly:
@@ -74,11 +70,11 @@ export class WeeklyScheduleService {
         time: lesson.time,
         isBooked,
 
-        teacher: lesson.teacher
+        teacher: lesson.teacherByCenter
           ? {
-              id: lesson.teacher.id,
-              name: lesson.teacher.user.name,
-              imageUrl: lesson.teacher.user.imageUrl,
+              id: lesson.teacherByCenter.id,
+              name: lesson.teacherByCenter.name,
+              imageUrl: lesson.teacherByCenter.imageUrl,
             }
           : null,
       });
@@ -122,9 +118,9 @@ export class WeeklyScheduleService {
         },
       });
 
-      const teacherIds = [...new Set(dataDays.map((d) => d.teacherId))];
+      const teacherIds = [...new Set(dataDays.map((d) => d.teacherByCenterId))];
 
-      const teachers = await prisma.teacher.findMany({
+      const teachers = await prisma.teacherByCenter.findMany({
         where: { id: { in: teacherIds } },
         select: { id: true },
       });
@@ -139,7 +135,7 @@ export class WeeklyScheduleService {
 
       await prisma.teacherDay.createMany({
         data: dataDays.map((item) => ({
-          teacherId: item.teacherId,
+          teacherByCenterId: item.teacherByCenterId,
           centerId: weekly.centerId,
           day: item.day,
           time: item.time,
@@ -171,8 +167,8 @@ export class WeeklyScheduleService {
         throw new NotFoundException('Weekly schedule Not Found');
       }
 
-      const teacher = await prisma.teacher.findUnique({
-        where: { id: teacherDayDto.teacherId },
+      const teacher = await prisma.teacherByCenter.findUnique({
+        where: { id: teacherDayDto.teacherByCenterId },
         select: { id: true },
       });
 
