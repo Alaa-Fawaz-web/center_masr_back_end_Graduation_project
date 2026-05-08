@@ -32,8 +32,6 @@ export class ChatWsService implements OnModuleInit, OnModuleDestroy {
         return;
       }
 
-      console.log('✅ CONNECTED', userId);
-
       this.addUser(userId, socket);
 
       this.broadcastPresence(userId, true);

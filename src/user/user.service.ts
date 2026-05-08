@@ -87,7 +87,6 @@ export class UsersService {
               id: true,
               classRoom: true,
               studyMaterial: true,
-              location: true,
               star: true,
               experienceYear: true,
               studySystem: true,
