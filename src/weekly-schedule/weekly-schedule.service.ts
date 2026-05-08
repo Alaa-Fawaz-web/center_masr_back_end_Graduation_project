@@ -35,11 +35,13 @@ export class WeeklyScheduleService {
             day: true,
             time: true,
             centerId: true,
+
             teacherByCenter: {
               select: {
                 id: true,
                 name: true,
                 imageUrl: true,
+                classRoom: true,
               },
             },
             bookedWeekly:
