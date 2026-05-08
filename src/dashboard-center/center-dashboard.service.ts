@@ -16,16 +16,16 @@ export class CenterDashboardService {
   }
   async findAllTeacher(
     centerId: string,
-    name?: string,
-    educationalStage?: string,
+    // name?: string,
+    // educationalStage?: string,
   ) {
-    const where =
-      educationalStage || name
-        ? { centerId, educationalStage, user: { name } }
-        : { centerId };
+    // const where =
+    //   educationalStage || name
+    //     ? { centerId, educationalStage, user: { name } }
+    //     : { centerId };
 
     const teachers = await this.prisma.teacherByCenter.findMany({
-      where,
+      where: { centerId },
       select: {
         classRoom: true,
         sharePrice: true,

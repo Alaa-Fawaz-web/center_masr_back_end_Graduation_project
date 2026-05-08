@@ -22,13 +22,13 @@ export class CenterDashboardController {
 
   @Get('teachers')
   findAllTeachers(
-    @Query() getAllDashboardCenterTeacherDto: GetAllDashboardCenterTeacherDto,
+    // @Query() getAllDashboardCenterTeacherDto: GetAllDashboardCenterTeacherDto,
     @Req() req,
   ) {
     return this.centerDashboardService.findAllTeacher(
       req.user.profileId,
-      getAllDashboardCenterTeacherDto.name,
-      getAllDashboardCenterTeacherDto.educationalStage,
+      // getAllDashboardCenterTeacherDto.name,
+      // getAllDashboardCenterTeacherDto.educationalStage,
     );
   }
   @RolesDecorator(CENTER)
