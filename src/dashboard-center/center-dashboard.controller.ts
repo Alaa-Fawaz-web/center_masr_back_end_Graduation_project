@@ -1,4 +1,13 @@
-import { Body, Controller, Get, Post, Query, Req } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  Param,
+  ParseUUIDPipe,
+  Post,
+  Query,
+  Req,
+} from '@nestjs/common';
 import { CenterDashboardService } from './center-dashboard.service';
 import { CENTER } from 'src/utils';
 import RolesDecorator from 'src/decorator/roles.decorator';
@@ -20,13 +29,14 @@ export class CenterDashboardController {
     );
   }
 
-  @Get('teachers')
+  @Get('teachers:centerId')
   findAllTeachers(
     // @Query() getAllDashboardCenterTeacherDto: GetAllDashboardCenterTeacherDto,
-    @Req() req,
+    @Param('centerId', ParseUUIDPipe) centerId: string,
+    // @Req() req,
   ) {
     return this.centerDashboardService.findAllTeacher(
-      req.user.profileId,
+      centerId,
       // getAllDashboardCenterTeacherDto.name,
       // getAllDashboardCenterTeacherDto.educationalStage,
     );
