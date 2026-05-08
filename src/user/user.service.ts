@@ -11,7 +11,6 @@ import {
   sendResponsive,
   TEACHER,
 } from 'src/utils';
-import { ProfileDataType, UserDataType } from 'src/types/type';
 import { Role } from '@prisma/client';
 import { UpdateUserDto } from './dto/updateUser.dto';
 
@@ -88,6 +87,7 @@ export class UsersService {
               id: true,
               classRoom: true,
               studyMaterial: true,
+              location: true,
               star: true,
               experienceYear: true,
               studySystem: true,
@@ -115,6 +115,7 @@ export class UsersService {
             select: {
               id: true,
               educationalStage: true,
+              location: true,
               governorate: true,
               studySystem: true,
               star: true,
@@ -206,6 +207,7 @@ export class UsersService {
                   id: true,
                   educationalStage: true,
                   location: true,
+                  governorate: true,
                   studySystem: true,
                   star: true,
                   bio: true,
