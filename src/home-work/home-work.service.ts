@@ -117,7 +117,6 @@ export class HomeWorkService {
   }
 
   async create(
-    courseId: string,
     teacherId: string,
     lessonId: string,
     createHomeWorkDto: CreateHomeWorkDto,
@@ -127,6 +126,7 @@ export class HomeWorkService {
         where: { id_teacherId: { id: lessonId, teacherId } },
         select: {
           id: true,
+          courseId: true,
         },
       });
 
@@ -137,7 +137,7 @@ export class HomeWorkService {
         prisma.homework.create({
           data: {
             ...createHomeWorkDto,
-            courseId,
+            courseId: lesson.courseId,
             lessonId,
             teacherId,
           },
@@ -146,7 +146,7 @@ export class HomeWorkService {
         prisma.course.update({
           where: {
             id_teacherId: {
-              id: courseId,
+              id: lesson.courseId,
               teacherId,
             },
           },

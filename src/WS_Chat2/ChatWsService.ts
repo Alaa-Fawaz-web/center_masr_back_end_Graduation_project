@@ -17,7 +17,7 @@ export class ChatWsService implements OnModuleInit, OnModuleDestroy {
   }
 
   onModuleInit() {
-    this.wss = new Server({ server: this.httpServer });
+    this.wss = new Server({ server: this.httpServer, path: '/api/v1/ws' });
 
     this.wss.on('connection', async (socket: WebSocket, req: any) => {
       const url = new URL(req.url, 'http://localhost');

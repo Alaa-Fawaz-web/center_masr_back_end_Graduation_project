@@ -42,12 +42,10 @@ export class HomeWorkController {
   @Post(':lessonId')
   create(
     @Param('lessonId', ParseUUIDPipe) lessonId: string,
-    @Query('courseId', ParseUUIDPipe) courseId: string,
     @Body() createHomeWorkDto: CreateHomeWorkDto,
     @Req() req,
   ) {
     return this.homeWorkService.create(
-      courseId,
       req.user.profileId,
       lessonId,
       createHomeWorkDto,

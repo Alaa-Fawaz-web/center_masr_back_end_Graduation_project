@@ -9,7 +9,7 @@ export class ConversationController {
 
   @AuthDecorator()
   @Post()
-  createConversation(@Body() getAllChatIdDto: GetAllChatIdDto) {
+  createConversation(@Query() getAllChatIdDto: GetAllChatIdDto) {
     return this.conversationService.createConversation(
       getAllChatIdDto.senderId,
       getAllChatIdDto.receiverId,
