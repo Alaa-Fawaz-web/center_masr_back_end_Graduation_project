@@ -3,6 +3,7 @@ import {
   Controller,
   Get,
   Param,
+  ParseIntPipe,
   ParseUUIDPipe,
   Post,
   Query,
@@ -31,12 +32,14 @@ export class CenterDashboardController {
 
   @Get('teachers/:centerId')
   findAllTeachers(
+    @Query('limit', ParseIntPipe) limit: number,
     // @Query() getAllDashboardCenterTeacherDto: GetAllDashboardCenterTeacherDto,
     @Param('centerId', ParseUUIDPipe) centerId: string,
     // @Req() req,
   ) {
     return this.centerDashboardService.findAllTeacher(
       centerId,
+      limit,
       // getAllDashboardCenterTeacherDto.name,
       // getAllDashboardCenterTeacherDto.educationalStage,
     );

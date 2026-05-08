@@ -16,6 +16,7 @@ export class CenterDashboardService {
   }
   async findAllTeacher(
     centerId: string,
+    take = 9,
     // name?: string,
     // educationalStage?: string,
   ) {
@@ -39,7 +40,7 @@ export class CenterDashboardService {
         educationalStage: true,
         bio: true,
       },
-      take: 10,
+      take,
     });
     return sendResponsive(teachers || [], 'Get All Teachers successfully');
   }
