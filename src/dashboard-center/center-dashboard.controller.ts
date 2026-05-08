@@ -20,7 +20,6 @@ export class CenterDashboardController {
     );
   }
 
-  @RolesDecorator(CENTER)
   @Get('teachers')
   findAllTeachers(
     @Query() getAllDashboardCenterTeacherDto: GetAllDashboardCenterTeacherDto,

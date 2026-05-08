@@ -17,7 +17,7 @@ import {
 export class TeacherDto {
   @Trim()
   @IsPhoneNumber('EG', { message: 'invalid Egyptian phone number' })
-  whatsApp?: string;
+  whatsPhone?: string;
 
   @Trim()
   @IsString()

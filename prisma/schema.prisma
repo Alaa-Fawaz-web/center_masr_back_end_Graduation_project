@@ -183,7 +183,7 @@ model Center {
 model TeacherByCenter {
   id String @id @default(uuid())
 
-  centerId String  @unique
+  centerId String
   center   Center  @relation(fields: [centerId], references: [id], onDelete: Cascade)
   name     String
   imageUrl String?

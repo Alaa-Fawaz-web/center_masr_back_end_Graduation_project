@@ -12,7 +12,7 @@ export class CenterDashboardService {
       data: { centerId, ...createTeahersDto },
     });
 
-    return sendResponsive(null, 'Get All Teachers successfully');
+    return sendResponsive(null, 'create teacher successfully');
   }
   async findAllTeacher(
     centerId: string,
