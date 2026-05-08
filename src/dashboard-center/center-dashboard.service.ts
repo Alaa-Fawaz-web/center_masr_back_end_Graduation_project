@@ -27,20 +27,16 @@ export class CenterDashboardService {
     const teachers = await this.prisma.teacherByCenter.findMany({
       where: { centerId },
       select: {
+        name: true,
+        imageUrl: true,
         classRoom: true,
         sharePrice: true,
+        experienceYear: true,
+        star: true,
         studyMaterial: true,
         studySystem: true,
-        center: {
-          select: {
-            user: {
-              select: {
-                name: true,
-                imageUrl: true,
-              },
-            },
-          },
-        },
+        educationalStage: true,
+        bio: true,
       },
       take: 10,
     });
