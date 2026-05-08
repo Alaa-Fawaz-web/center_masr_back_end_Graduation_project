@@ -29,7 +29,7 @@ export class CenterDashboardController {
     );
   }
 
-  @Get('teachers:centerId')
+  @Get('teachers/:centerId')
   findAllTeachers(
     // @Query() getAllDashboardCenterTeacherDto: GetAllDashboardCenterTeacherDto,
     @Param('centerId', ParseUUIDPipe) centerId: string,
