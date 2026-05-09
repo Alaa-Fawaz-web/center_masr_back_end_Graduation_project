@@ -41,8 +41,6 @@ export class ChatWsService implements OnModuleInit, OnModuleDestroy {
       });
 
       socket.on('close', () => {
-        console.log('❌ DISCONNECTED', userId);
-
         this.removeUser(userId, socket);
 
         this.broadcastPresence(userId, false);

@@ -15,19 +15,20 @@ import { CreateHomeWorkDto } from './dto/create-home-work.dto';
 import { GetAllLessonDto } from 'src/lesson/dto/getAllLessonDto';
 import RolesDecorator from 'src/decorator/roles.decorator';
 import { TEACHER } from 'src/utils';
+import QueryDto from 'src/validators/query.dto';
 
-@Controller('home-works')
+@Controller('homeWorks')
 export class HomeWorkController {
   constructor(private readonly homeWorkService: HomeWorkService) {}
 
   @Get()
   findAll(
-    @Query('courseId', ParseUUIDPipe) courseId,
+    @Query() courseId: QueryDto,
     @Query() getAllHomeWorkDto: GetAllLessonDto,
     @Req() req,
   ) {
     return this.homeWorkService.findAll(
-      courseId,
+      courseId.id,
       req.user.profileId,
       getAllHomeWorkDto,
     );

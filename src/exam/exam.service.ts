@@ -33,7 +33,7 @@ export class ExamService {
       },
     });
 
-    if (!exam) throw new NotFoundException('Exam not found or not authorized');
+    if (!exam) return sendResponsive(null, 'Exam not found or not authorized');
     const {
       lesson: { bookingLesson, title },
       id,
@@ -79,6 +79,7 @@ export class ExamService {
         duration: true,
         lessonId: true,
         teacherId: true,
+        createdAt: true,
         lesson: {
           select: {
             id: true,
@@ -93,11 +94,11 @@ export class ExamService {
       },
     });
 
-    if (exams.length === 0) throw new NotFoundException('Exams not found');
+    if (exams.length === 0) return sendResponsive(null, 'Exams not found');
     return sendResponsive(
       exams.map((exam) => {
         const {
-          lesson: { bookingLesson },
+          lesson: { bookingLesson, title },
           lessonId,
           teacherId,
           ...data
@@ -107,6 +108,7 @@ export class ExamService {
 
         return {
           ...data,
+          title,
           isBooked: isBooked,
         };
       }),

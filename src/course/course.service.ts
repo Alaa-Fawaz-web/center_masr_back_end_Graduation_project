@@ -16,6 +16,17 @@ export class CourseService {
         id: true,
         time: true,
         title: true,
+        lessonCounts: true,
+        createdAt: true,
+        teacher: {
+          select: {
+            user: {
+              select: {
+                name: true,
+              },
+            },
+          },
+        },
         classRoom: true,
         studyMaterial: true,
       },
@@ -26,17 +37,26 @@ export class CourseService {
     return sendResponsive(course, 'Get Course successfully');
   }
 
-  async findAll(page = 1, teacherId: string, getAllCourseDto: GetAllCourseDto) {
+  async findAll(
+    teacherId: string,
+    classRoom: string,
+    title?: string,
+    page = 1,
+  ) {
     const limit = 6;
     const skip = (page - 1) * limit;
 
-    const where = getAllCourseDto.classRoom
-      ? {
-          teacherId,
-          classRoom: getAllCourseDto.classRoom,
-          title: getAllCourseDto?.title,
-        }
-      : { teacherId };
+    let where;
+    if (classRoom) {
+      where = {
+        teacherId,
+        classRoom,
+      };
+    } else if (classRoom && title) {
+      where = { teacherId, title, classRoom };
+    } else {
+      where = { teacherId };
+    }
 
     const courses = await this.prisma.course.findMany({
       where,

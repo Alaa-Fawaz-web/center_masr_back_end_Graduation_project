@@ -32,7 +32,7 @@ export class HomeWorkService {
       },
     });
 
-    if (!homeWork) throw new NotFoundException('Home work not found');
+    if (!homeWork) return sendResponsive(null, 'Home work not found');
 
     const {
       lesson: { bookingLesson, title },
@@ -44,7 +44,7 @@ export class HomeWorkService {
     let isBooked = teacherId === currentUserId || bookingLesson.length > 0;
 
     if (!isBooked)
-      throw new NotFoundException('Exam not found or not authorized');
+      throw new NotFoundException('Home work not found or not authorized');
 
     return sendResponsive(
       {
@@ -78,6 +78,7 @@ export class HomeWorkService {
         id: true,
         lessonId: true,
         teacherId: true,
+        createdAt: true,
         lesson: {
           select: {
             id: true,
@@ -94,12 +95,12 @@ export class HomeWorkService {
       },
     });
 
-    if (!homeWorks.length) throw new NotFoundException('Home Works not found');
+    if (!homeWorks.length) return sendResponsive(null, 'home work not found');
 
     return sendResponsive(
       homeWorks.map((homeWork) => {
         const {
-          lesson: { bookingLesson },
+          lesson: { bookingLesson, title },
           lessonId,
           teacherId,
           ...data
@@ -109,6 +110,7 @@ export class HomeWorkService {
 
         return {
           ...data,
+          title,
           isBooked: isBooked,
         };
       }),

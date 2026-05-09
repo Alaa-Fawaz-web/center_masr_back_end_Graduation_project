@@ -1,12 +1,7 @@
-import {
-  Injectable,
-  MethodNotAllowedException,
-  NotFoundException,
-} from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateNoteDto } from './dto/create-note.dto';
 import { PrismaService } from 'src/prisma.service';
 import { sendResponsive } from 'src/utils';
-import { GetAllLessonDto } from 'src/lesson/dto/getAllLessonDto';
 import QueryDto from 'src/validators/query.dto';
 
 @Injectable()
@@ -37,7 +32,7 @@ export class NoteService {
       },
     });
 
-    if (!note) throw new NotFoundException('Note not found');
+    if (!note) return sendResponsive(null, 'Note not found');
 
     const {
       lesson: { bookingLesson, title },
@@ -86,6 +81,7 @@ export class NoteService {
         id: true,
         lessonId: true,
         teacherId: true,
+        createdAt: true,
         lesson: {
           select: {
             id: true,
@@ -103,28 +99,22 @@ export class NoteService {
       },
     });
 
-    if (!notes.length) throw new NotFoundException('Notes not found');
+    if (!notes.length) return sendResponsive(null, 'Notes not found');
 
     return sendResponsive(
-      {
-        meta: {
-          total: notes.length,
-          page,
-        },
-        courseId,
-        data: notes.map((note) => {
-          const isBooked =
-            note.teacherId === currentUserId ||
-            note.lesson.bookingLesson.length > 0;
+      notes.map((note) => {
+        const isBooked =
+          note.teacherId === currentUserId ||
+          note.lesson.bookingLesson.length > 0;
 
-          return {
-            id: note.id,
-            lessonId: note.lessonId,
-            title: note.lesson.title,
-            isBooked,
-          };
-        }),
-      },
+        return {
+          id: note.id,
+          lessonId: note.lessonId,
+          title: note.lesson.title,
+          createdAt: note.createdAt,
+          isBooked,
+        };
+      }),
       'Notes retrieved successfully',
     );
   }

@@ -15,6 +15,7 @@ import { CreateExamDto } from './dto/create-exam.dto';
 import { GetAllLessonDto } from 'src/lesson/dto/getAllLessonDto';
 import RolesDecorator from 'src/decorator/roles.decorator';
 import { TEACHER } from 'src/utils';
+import QueryDto from 'src/validators/query.dto';
 
 @Controller('exams')
 export class ExamController {
@@ -22,12 +23,12 @@ export class ExamController {
 
   @Get()
   findAll(
-    @Query('courseId', ParseUUIDPipe) courseId: string,
+    @Query() queryDto: QueryDto,
     @Query() getAllExamDto: GetAllLessonDto,
     @Req() req,
   ) {
     return this.examService.findAll(
-      courseId,
+      queryDto.id,
       req.user.profileId,
       getAllExamDto,
     );

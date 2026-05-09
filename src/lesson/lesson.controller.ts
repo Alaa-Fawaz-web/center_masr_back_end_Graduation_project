@@ -18,7 +18,7 @@ import { GetAllLessonDto } from './dto/getAllLessonDto';
 import QueryDto from 'src/validators/query.dto';
 import { TEACHER } from 'src/utils';
 
-@Controller('lessons')
+@Controller('courses/lessons')
 export class LessonController {
   constructor(private readonly lessonService: LessonService) {}
 

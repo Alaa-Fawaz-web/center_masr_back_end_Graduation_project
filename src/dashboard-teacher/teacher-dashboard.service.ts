@@ -10,22 +10,33 @@ export class TeacherDashboardService {
     const [bookings, studentCounts] = await Promise.all([
       this.prisma.bookedLesson.findMany({
         where: { lesson: { teacherId: teacherId } },
+        distinct: ['studentId'],
         select: {
           id: true,
           createdAt: true,
+          student: {
+            select: {
+              user: {
+                select: {
+                  name: true,
+                  imageUrl: true,
+                },
+              },
+            },
+          },
           lesson: {
             select: {
               course: {
                 select: {
                   title: true,
-                  studyMaterial: true,
+                  classRoom: true,
                 },
               },
             },
           },
         },
-        skip: (page - 1) * limit,
-        take: limit,
+        // skip: (page - 1) * limit,
+        // take: limit,
       }),
 
       this.prisma.teacher.findUnique({
@@ -36,6 +47,7 @@ export class TeacherDashboardService {
       }),
     ]);
 
+    console.log(bookings, studentCounts);
     return sendResponsive(
       { studentCounts: studentCounts?.studentCounts, bookings },
       bookings.length ? 'Bookings retrieved successfully' : 'No bookings found',
