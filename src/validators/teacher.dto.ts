@@ -25,7 +25,7 @@ export class TeacherDto {
 
   @IsArray()
   @IsInSet(studySystemSet, { each: true })
-  studySystem?: ('عربي' | 'انجليزي')[];
+  studySystem?: ('عربي' | 'لغات')[];
 
   @IsArray()
   @IsInSet(classRoomSet, { each: true })

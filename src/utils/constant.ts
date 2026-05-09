@@ -76,7 +76,7 @@ const classRoomSet = new Set(classRoomArray);
 const studyMaterialSet = new Set(studyMaterialArray);
 const educationalStageSet = new Set(educationalStageArray);
 const daySet = new Set(weekDays);
-const studySystemSet = new Set(['عربي', 'انجليزي']);
+const studySystemSet = new Set(['عربي', 'لغات']);
 
 const [BadRequest, Unauthorized, Forbidden, NotFound] = [
   'BadRequest',

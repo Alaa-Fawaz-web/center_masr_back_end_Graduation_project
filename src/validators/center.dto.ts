@@ -36,7 +36,7 @@ export class CenterDto {
 
   @IsArray()
   @IsInSet(studySystemSet, { each: true })
-  studySystem?: ('عربي' | 'انجليزي')[];
+  studySystem?: ('عربي' | 'لغات')[];
 
   @IsArray()
   @UniqueArray()
